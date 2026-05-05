@@ -15,10 +15,10 @@
   --r:6px;--rl:10px;
 }
 body{background:var(--bg);color:var(--txt);font-family:Arial,sans-serif;font-size:14px;line-height:1.5}
-header{background:var(--sur);border-bottom:1px solid var(--brd);padding:0 36px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+header{background:var(--sur);border-bottom:1px solid var(--brd);padding:0 36px;height:72px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .hlogo{display:flex;align-items:center;gap:20px}
-.hlogo img{height:46px;width:auto}
-.hdivider{width:1px;height:38px;background:var(--brd2)}
+.hlogo img{height:64px;width:auto}
+.hdivider{width:1px;height:44px;background:var(--brd2)}
 .htitle{font-size:13px;font-weight:700;color:var(--txt)}
 .hsub{font-size:9px;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
 .hright{display:flex;align-items:center;gap:14px}
@@ -263,7 +263,7 @@ function populateSelects(){
   const opts=DATA.map((row,i)=>`<option value="${i}">${num(row,I.CICLOS)??i+1}</option>`).join('');
   document.getElementById('selCiclo').innerHTML=opts;
   document.getElementById('selCiclo').value=DATA.length-1;
-  const optsC=DATA.map((row,i)=>`<option value="${i}">Ciclo ${num(row,I.CICLOS)??i+1} — ${g(row,I.DATA)||''}</option>`).join('');
+  const optsC=DATA.map((row,i)=>`<option value="${i}">Ciclo ${num(row,I.CICLOS)??i+1}</option>`).join('');
   document.getElementById('cmpA').innerHTML=optsC;
   document.getElementById('cmpB').innerHTML=optsC;
   document.getElementById('cmpB').value=DATA.length-1;
@@ -361,12 +361,12 @@ function renderTempo(){
   const lb=DATA.map(r=>num(r,I.CICLOS)??'');
   dc('cTempoSD');
   CH.cTempoSD=new Chart(document.getElementById('cTempoSD'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Subida (s)',data:deltas(I.T_SUB),borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.5,pointRadius:0,borderWidth:1.5,fill:true,spanGaps:false},
-    {label:'Descida (s)',data:deltas(I.T_DES),borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.5,pointRadius:0,borderWidth:1.5,fill:true,spanGaps:false},
+    {label:'Subida (s)',data:deltas(I.T_SUB),borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#2563eb',borderWidth:1.5,fill:true,spanGaps:false},
+    {label:'Descida (s)',data:deltas(I.T_DES),borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#16a34a',borderWidth:1.5,fill:true,spanGaps:false},
   ]},options:CO()});
   dc('cTempoAtivo');
   CH.cTempoAtivo=new Chart(document.getElementById('cTempoAtivo'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Motor Ativo (s)',data:deltas(I.T_ATIVO),borderColor:'#7c3aed',backgroundColor:'#7c3aed0d',tension:.5,pointRadius:0,borderWidth:1.5,fill:true,spanGaps:false},
+    {label:'Motor Ativo (s)',data:deltas(I.T_ATIVO),borderColor:'#7c3aed',backgroundColor:'#7c3aed0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#7c3aed',borderWidth:1.5,fill:true,spanGaps:false},
   ]},options:CO()});
   const last=DATA[DATA.length-1];
   document.getElementById('infoTotal').innerHTML=`
