@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Durabilidade — Assento Motorizado</title>
+<title>Análise de Retirada das Molas Gás</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#f7f6f3;--sur:#fff;--brd:#e8e5df;--brd2:#ccc9c2;
   --txt:#1a1917;--mut:#7a7670;--fnt:#c0bdb6;
   --blu:#2563eb;--grn:#16a34a;--amb:#d97706;--red:#dc2626;--pur:#7c3aed;
-  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  --mono:'IBM Plex Mono',monospace;--sans:'Inter',sans-serif;
   --r:6px;--rl:10px;
 }
 body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:14px;line-height:1.5}
@@ -125,8 +125,8 @@ footer{text-align:center;padding:20px 40px;font-family:var(--mono);font-size:9px
   <div class="logo">
     <div class="lmark"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 3v5l3 2"/></svg></div>
     <div>
-      <div class="ltitle">Teste de Durabilidade — Assento Motorizado</div>
-      <div class="lsub">FUSO + BUCHA 10FV / 90NY · MONITORAMENTO CONTÍNUO</div>
+      <div class="ltitle">Análise de Retirada das Molas Gás - Sistema com 10%FB e 90%Nylon</div>
+      <div class="lsub">MONITORAMENTO CONTÍNUO · FUSO + BUCHA 10FV / 90NY</div>
     </div>
   </div>
   <div class="hright">
@@ -208,11 +208,11 @@ footer{text-align:center;padding:20px 40px;font-family:var(--mono);font-size:9px
 
 <!-- TEMPO -->
 <div class="page" id="p-tempo">
-  <section><div class="slabel"><span>tempo de subida e descida por ciclo</span></div><div class="cc"><div class="ctitle">Tempo de Ciclo — Subida e Descida (s)</div><div class="csub">VARIAÇÃO DO TEMPO DE MOVIMENTO AO LONGO DO TESTE</div><div class="cwrap-lg"><canvas id="cTempoSD"></canvas></div></div></section>
+  <section><div class="slabel"><span>duração por ciclo</span></div><div class="cc"><div class="ctitle">Duração por Ciclo — Subida e Descida (s)</div><div class="csub">TEMPO REAL DE CADA CICLO (LEITURA ATUAL − ANTERIOR)</div><div class="cwrap-lg"><canvas id="cTempoSD"></canvas></div></div></section>
   <section>
     <div class="cgrid">
-      <div class="cc"><div class="ctitle">Tempo Motor Ativo por Ciclo (s)</div><div class="csub">SUBIDA + DESCIDA POR CICLO</div><div class="cwrap"><canvas id="cTempoAtivo"></canvas></div></div>
-      <div class="cc"><div class="ctitle">Tempo Total de Teste Acumulado (min)</div><div class="csub">INCLUI PERÍODOS DE DESCANSO DO MOTOR</div><div class="cwrap"><canvas id="cTempoTotal"></canvas></div></div>
+      <div class="cc"><div class="ctitle">Tempo Motor Ativo por Ciclo (s)</div><div class="csub">DURAÇÃO REAL DE FUNCIONAMENTO POR CICLO</div><div class="cwrap"><canvas id="cTempoAtivo"></canvas></div></div>
+      <div class="cc"><div class="ctitle">Tempo Total de Teste Acumulado (h)</div><div class="csub">PROGRESSÃO DO TEMPO TOTAL INCLUINDO DESCANSO DO MOTOR</div><div class="cwrap"><canvas id="cTempoTotal"></canvas></div></div>
     </div>
   </section>
 </div>
@@ -256,7 +256,8 @@ const g=(row,i)=>row[i]??null;
 const num=(row,i)=>{const v=g(row,i);return typeof v==='number'?v:null;};
 const f=(v,d=2)=>typeof v==='number'&&!isNaN(v)?v.toFixed(d):'—';
 const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
-const fmtMin=v=>{if(typeof v!=='number'||isNaN(v))return '—';return `${Math.floor(v)}min ${Math.round((v%1)*60)}s`;};
+const fmtMin=v=>{if(typeof v!=='number'||isNaN(v))return '—';return `${(v/60).toFixed(2)} min`;};
+const fmtHora=v=>{if(typeof v!=='number'||isNaN(v))return '—';return `${(v/60).toFixed(2)} h`;};
 
 function getSub(row){return Array.from({length:40},(_,i)=>num(row,I.SUB_START+i)).filter(v=>v!==null);}
 function getDes(row){return Array.from({length:10},(_,i)=>num(row,I.DES_START+i)).filter(v=>v!==null);}
@@ -309,13 +310,11 @@ function renderResumo(){
   const ti=trendS>.05?'↑':trendS<-.05?'↓':'→';
 
   document.getElementById('kpiGrid').innerHTML=`
-    <div class="kpi"><div class="kpi-lbl">Quantidade de Ciclos</div><div class="kpi-val">${num(last,I.CICLOS)??'—'}<span class="kpi-unit">cx</span></div><div class="kpi-sub">${n} leituras</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Total Subindo</div><div class="kpi-val" style="font-size:18px;padding-top:3px">${f(num(last,I.T_SUB),2)}<span class="kpi-unit">s</span></div><div class="kpi-sub">último ciclo</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Total Descendo</div><div class="kpi-val" style="font-size:18px;padding-top:3px">${f(num(last,I.T_DES),2)}<span class="kpi-unit">s</span></div><div class="kpi-sub">último ciclo</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Motor Ativo</div><div class="kpi-val" style="font-size:18px;padding-top:3px">${f(num(last,I.T_ATIVO),2)}<span class="kpi-unit">s</span></div><div class="kpi-sub">último ciclo</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Total de Teste</div><div class="kpi-val" style="font-size:16px;padding-top:4px">${fmtMin(num(last,I.T_TOTAL))}</div><div class="kpi-sub">com descanso do motor</div></div>
-    <div class="kpi"><div class="kpi-lbl">Corrente Média ↑</div><div class="kpi-val">${f(mS,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub ${tc}">${ti} tendência ${f(trendS,3)}A</div></div>
-    <div class="kpi"><div class="kpi-lbl">Ciclos Anômalos</div><div class="kpi-val ${anom>0?'up':'neu'}">${anom}<span class="kpi-unit">cx</span></div><div class="kpi-sub">threshold ±2σ</div></div>`;
+    <div class="kpi"><div class="kpi-lbl">Quantidade de Ciclos</div><div class="kpi-val">${num(last,I.CICLOS)??'—'}<span class="kpi-unit">cx</span></div><div class="kpi-sub">${n} leituras registradas</div></div>
+    <div class="kpi"><div class="kpi-lbl">Tempo Total Subindo</div><div class="kpi-val" style="font-size:18px;padding-top:3px">${fmtMin(num(last,I.T_SUB))}</div><div class="kpi-sub">acumulado até este ciclo</div></div>
+    <div class="kpi"><div class="kpi-lbl">Tempo Total Descendo</div><div class="kpi-val" style="font-size:18px;padding-top:3px">${fmtMin(num(last,I.T_DES))}</div><div class="kpi-sub">acumulado até este ciclo</div></div>
+    <div class="kpi"><div class="kpi-lbl">Tempo Motor Ativo</div><div class="kpi-val" style="font-size:18px;padding-top:3px">${fmtMin(num(last,I.T_ATIVO))}</div><div class="kpi-sub">acumulado até este ciclo</div></div>
+    <div class="kpi"><div class="kpi-lbl">Tempo Total de Teste</div><div class="kpi-val" style="font-size:18px;padding-top:3px">${fmtHora(num(last,I.T_TOTAL))}</div><div class="kpi-sub">inclui descanso do motor</div></div>`;
 
   const als=[];
   if(anom>0)als.push({t:'crit',msg:`${anom} ciclo(s) com corrente anômala (acima de ${f(lS,3)}A)`,d:'Selecione o ciclo na aba Perfil de Corrente para investigar'});
@@ -328,16 +327,16 @@ function renderResumo(){
       <div class="adot"></div><div><div class="amsg">${a.msg}</div><div class="adet">${a.d}</div></div>
     </div>`).join('');
 
-  const thead='<tr><th>Ciclos</th><th>Data</th><th>Hora</th><th>T.Sub(s)</th><th>T.Des(s)</th><th>T.Ativo(s)</th><th>T.Total(min)</th></tr>';
+  const thead='<tr><th>Ciclos</th><th>Data</th><th>Hora</th><th>T.Sub (min)</th><th>T.Des (min)</th><th>T.Ativo (min)</th><th>T.Total (h)</th></tr>';
   const tbody=DATA.slice(-15).reverse().map(row=>`
     <tr>
       <td class="hi">${num(row,I.CICLOS)??'—'}</td>
       <td>${g(row,I.DATA)||'—'}</td>
       <td>${g(row,I.HORA)||'—'}</td>
-      <td>${f(num(row,I.T_SUB),2)}</td>
-      <td>${f(num(row,I.T_DES),2)}</td>
-      <td>${f(num(row,I.T_ATIVO),2)}</td>
-      <td>${f(num(row,I.T_TOTAL),2)}</td>
+      <td>${fmtMin(num(row,I.T_SUB))}</td>
+      <td>${fmtMin(num(row,I.T_DES))}</td>
+      <td>${fmtMin(num(row,I.T_ATIVO))}</td>
+      <td>${fmtHora(num(row,I.T_TOTAL))}</td>
     </tr>`).join('');
   document.getElementById('tableBox').innerHTML=`<table><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
 }
@@ -387,8 +386,8 @@ function renderPerfil(){
     <div class="kpi"><div class="kpi-lbl">Pico Subindo</div><div class="kpi-val">${f(pS,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">valor máximo</div></div>
     <div class="kpi"><div class="kpi-lbl">Média Descendo</div><div class="kpi-val">${f(mD,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">10 amostras</div></div>
     <div class="kpi"><div class="kpi-lbl">Pico Descendo</div><div class="kpi-val">${f(pD,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">valor máximo</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Subindo</div><div class="kpi-val">${f(num(row,I.T_SUB),2)}<span class="kpi-unit">s</span></div><div class="kpi-sub">col D</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Descendo</div><div class="kpi-val">${f(num(row,I.T_DES),2)}<span class="kpi-unit">s</span></div><div class="kpi-sub">col AS</div></div>`;
+    <div class="kpi"><div class="kpi-lbl">Tempo Subindo</div><div class="kpi-val" style="font-size:16px;padding-top:3px">${fmtMin(num(row,I.T_SUB))}</div><div class="kpi-sub">acumulado</div></div>
+    <div class="kpi"><div class="kpi-lbl">Tempo Descendo</div><div class="kpi-val" style="font-size:16px;padding-top:3px">${fmtMin(num(row,I.T_DES))}</div><div class="kpi-sub">acumulado</div></div>`;
 }
 
 // ══ TENDÊNCIA ═══════════════════════════════════════════
@@ -463,20 +462,38 @@ function renderComparador(){
 // ══ TEMPO ═══════════════════════════════════════════════
 function renderTempo(){
   const lb=DATA.map(r=>num(r,I.CICLOS)??'');
+
+  // Delta: tempo atual - tempo anterior (duração real de cada ciclo)
+  function deltas(colIdx){
+    return DATA.map((r,i)=>{
+      const cur=num(r,colIdx);
+      if(i===0)return null; // sem anterior para o primeiro
+      const prev=num(DATA[i-1],colIdx);
+      if(cur===null||prev===null)return null;
+      const d=cur-prev;
+      return d>=0?+d.toFixed(3):null; // ignora valores negativos (reset)
+    });
+  }
+
+  const dSub=deltas(I.T_SUB);
+  const dDes=deltas(I.T_DES);
+  const dAtivo=deltas(I.T_ATIVO);
+
   dc('cTempoSD');
   CH.cTempoSD=new Chart(document.getElementById('cTempoSD'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Subindo (s)',data:DATA.map(r=>num(r,I.T_SUB)),borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true},
-    {label:'Descendo (s)',data:DATA.map(r=>num(r,I.T_DES)),borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true},
+    {label:'Duração Subida (s)',data:dSub,borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true,spanGaps:false},
+    {label:'Duração Descida (s)',data:dDes,borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true,spanGaps:false},
   ]},options:CO()});
 
   dc('cTempoAtivo');
   CH.cTempoAtivo=new Chart(document.getElementById('cTempoAtivo'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Motor Ativo (s)',data:DATA.map(r=>num(r,I.T_ATIVO)),borderColor:'#7c3aed',backgroundColor:'#7c3aed0d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true},
+    {label:'Motor Ativo por ciclo (s)',data:dAtivo,borderColor:'#7c3aed',backgroundColor:'#7c3aed0d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true,spanGaps:false},
   ]},options:CO()});
 
+  // Tempo total acumulado — mantém o valor original (em horas)
   dc('cTempoTotal');
   CH.cTempoTotal=new Chart(document.getElementById('cTempoTotal'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Tempo Total (min)',data:DATA.map(r=>num(r,I.T_TOTAL)),borderColor:'#d97706',backgroundColor:'#d977060d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true},
+    {label:'Tempo Total (h)',data:DATA.map(r=>{const v=num(r,I.T_TOTAL);return v!==null?+(v/60).toFixed(3):null;}),borderColor:'#d97706',backgroundColor:'#d977060d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true},
   ]},options:CO()});
 }
 
