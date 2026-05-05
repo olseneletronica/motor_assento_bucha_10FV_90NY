@@ -193,8 +193,19 @@ const g=(row,i)=>row[i]??null;
 const num=(row,i)=>{const v=g(row,i);return typeof v==='number'?v:null;};
 const f=(v,d=2)=>typeof v==='number'&&!isNaN(v)?v.toFixed(d):'—';
 const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
-const fmtMin=v=>typeof v==='number'&&!isNaN(v)?`${(v/60).toFixed(2)} min`:'—';
-const fmtHora=v=>typeof v==='number'&&!isNaN(v)?`${(v/60).toFixed(2)} h`:'—';
+const fmtMin=v=>{
+  if(typeof v!=='number'||isNaN(v))return '—';
+  const m=v/60;
+  if(m<60)return `${Math.round(m)} min`;
+  const h=Math.floor(m/60),mn=Math.round(m%60);
+  return mn>0?`${h}h ${mn}min`:`${h}h`;
+};
+const fmtHora=v=>{
+  if(typeof v!=='number'||isNaN(v))return '—';
+  if(v<60)return `${Math.round(v)} min`;
+  const h=Math.floor(v/60),mn=Math.round(v%60);
+  return mn>0?`${h}h ${mn}min`:`${h}h`;
+};
 
 function getSub(row){return Array.from({length:40},(_,i)=>num(row,I.SUB_START+i)).filter(v=>v!==null);}
 function getDes(row){return Array.from({length:10},(_,i)=>num(row,I.DES_START+i)).filter(v=>v!==null);}
