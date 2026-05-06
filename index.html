@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<!-- v3 -->
+<!-- v4 -->
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -47,7 +47,7 @@ section{margin-bottom:32px}
 .kpi-val{font-family:Arial,sans-serif;font-size:22px;font-weight:700;color:var(--txt);line-height:1}
 .kpi-unit{font-family:Arial,sans-serif;font-size:10px;color:var(--mut);margin-left:2px}
 .kpi-sub{font-family:Arial,sans-serif;font-size:9px;color:var(--mut);margin-top:5px}
-.info-total{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 20px;display:flex;align-items:center;gap:10px;font-family:Arial,sans-serif;font-size:12px;color:var(--mut)}
+.info-total{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 20px;display:flex;align-items:center;gap:10px;font-family:Arial,sans-serif;font-size:12px;color:var(--mut);flex-wrap:wrap}
 .info-total strong{font-family:Arial,sans-serif;color:var(--txt);font-size:14px}
 .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(450px,1fr));gap:14px}
 .cc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:18px 22px 14px}
@@ -59,13 +59,25 @@ section{margin-bottom:32px}
 .ctrl-label{font-family:Arial,sans-serif;font-size:10px;font-weight:700;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 select{font-family:Arial,sans-serif;font-size:11px;background:var(--sur);border:1px solid var(--brd2);border-radius:var(--r);color:var(--txt);padding:5px 10px;cursor:pointer;outline:none}
 select:focus{border-color:var(--txt)}
-.badge{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:4px;border:1px solid}
+.badge{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
 .badge-blu{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
 .badge-grn{background:#f0fdf4;border-color:#bbf7d0;color:#15803d}
 .badge-amb{background:#fffbeb;border-color:#fde68a;color:#92400e}
+.badge-pur{background:#f5f3ff;border-color:#ddd6fe;color:#6d28d9}
+.badge-gray{background:#f3f4f6;border-color:#d1d5db;color:#374151}
+/* Setup info card */
+.setup-card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 20px;display:flex;gap:24px;flex-wrap:wrap;align-items:center}
+.setup-item{display:flex;flex-direction:column;gap:3px}
+.setup-item-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.setup-item-val{font-size:13px;font-weight:700;color:var(--txt)}
+/* Comparador */
 .cmp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
 .cmp-slot{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:12px 14px}
 .cmp-slot-title{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+.cmp-mode{display:flex;gap:8px;margin-bottom:16px}
+.cmp-mode-btn{font-family:Arial,sans-serif;font-size:10px;font-weight:700;padding:5px 14px;border-radius:var(--r);border:1px solid var(--brd2);background:var(--sur);color:var(--mut);cursor:pointer;transition:all .15s}
+.cmp-mode-btn.active{background:var(--txt);color:#fff;border-color:var(--txt)}
+/* Tabela */
 .tcard{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden}
 .twrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
@@ -91,8 +103,8 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
     <img id="logoImg" src="" alt="Olsen"/>
     <div class="hdivider"></div>
     <div>
-      <div class="htitle">Análise de Retirada das Molas Gás — Sistema com 10%FB e 90%Nylon</div>
-      <div class="hsub">Monitoramento Contínuo · Fuso + Bucha 10FV / 90NY</div>
+      <div class="htitle">Análise de Retirada das Molas Gás</div>
+      <div class="hsub">Monitoramento Contínuo</div>
     </div>
   </div>
   <div class="hright">
@@ -112,11 +124,14 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
   <div class="tab" onclick="goTab('tempo',this)">TEMPO DE CICLO</div>
 </nav>
 
+<!-- RESUMO -->
 <div class="page active" id="p-resumo">
   <section><div class="slabel"><span>métricas gerais</span></div><div class="kpi-grid" id="kpiGrid"><div class="sbox"><div class="spinner"></div><span>carregando...</span></div></div></section>
+  <section><div class="slabel"><span>configurações do ensaio</span></div><div class="setup-card" id="setupCard"><span style="color:var(--fnt);font-size:11px">Carregando configurações...</span></div></section>
   <section><div class="slabel"><span>últimas 15 leituras</span></div><div class="tcard"><div class="twrap" id="tableBox"></div></div></section>
 </div>
 
+<!-- PERFIL -->
 <div class="page" id="p-perfil">
   <section>
     <div class="slabel"><span>perfil de corrente por ciclo</span></div>
@@ -124,6 +139,7 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
       <div class="ctrl-row">
         <span class="ctrl-label">Ciclo:</span>
         <select id="selCiclo" onchange="renderPerfil()"></select>
+        <span id="perfilSetupBadge"></span>
         <span class="badge badge-blu">40 amostras ↑</span>
         <span class="badge badge-grn">10 amostras ↓</span>
       </div>
@@ -135,6 +151,7 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
   <section><div class="slabel"><span>estatísticas do ciclo selecionado</span></div><div class="kpi-grid" id="perfilStats" style="grid-template-columns:repeat(6,1fr)"></div></section>
 </div>
 
+<!-- TENDÊNCIA -->
 <div class="page" id="p-tendencia">
   <section>
     <div class="slabel"><span>corrente média ao longo dos ciclos</span></div>
@@ -149,23 +166,42 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
   </section>
 </div>
 
+<!-- COMPARADOR -->
 <div class="page" id="p-comparador">
   <section>
-    <div class="slabel"><span>comparador de ciclos</span></div>
-    <div class="cmp-grid">
-      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-blu">CICLO A</span></div><select id="cmpA" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
-      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-grn">CICLO B</span></div><select id="cmpB" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
-      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-amb">CICLO C</span></div><select id="cmpC" onchange="renderComparador()" style="width:100%;margin-top:6px"><option value="">— nenhum —</option></select></div>
+    <div class="slabel"><span>comparador</span></div>
+    <!-- Modo de seleção -->
+    <div class="cmp-mode">
+      <button class="cmp-mode-btn active" id="btnModoCiclo" onclick="setModo('ciclo')">POR CICLO</button>
+      <button class="cmp-mode-btn" id="btnModoSetup" onclick="setModo('setup')">POR CONFIGURAÇÃO</button>
     </div>
-    <div class="cc"><div class="ctitle">Perfil de Corrente — Subida</div><div class="csub">Comparação das 40 amostras entre os ciclos selecionados</div><div class="cwrap-lg"><canvas id="cCmpSub"></canvas></div></div>
+    <!-- Seleção por ciclo -->
+    <div id="cmpCicloPanel">
+      <div class="cmp-grid">
+        <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-blu">CICLO A</span></div><select id="cmpA" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
+        <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-grn">CICLO B</span></div><select id="cmpB" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
+        <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-amb">CICLO C</span></div><select id="cmpC" onchange="renderComparador()" style="width:100%;margin-top:6px"><option value="">— nenhum —</option></select></div>
+      </div>
+    </div>
+    <!-- Seleção por configuração -->
+    <div id="cmpSetupPanel" style="display:none">
+      <div class="cmp-grid">
+        <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-blu">CONFIGURAÇÃO A</span></div><select id="cmpSA" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
+        <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-grn">CONFIGURAÇÃO B</span></div><select id="cmpSB" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
+        <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-amb">CONFIGURAÇÃO C</span></div><select id="cmpSC" onchange="renderComparador()" style="width:100%;margin-top:6px"><option value="">— nenhum —</option></select></div>
+      </div>
+      <div style="font-size:10px;color:var(--mut);margin-bottom:12px;font-family:Arial">Cada configuração é representada pela média das correntes de todos os seus ciclos.</div>
+    </div>
+    <div class="cc"><div class="ctitle">Perfil de Corrente — Subida</div><div class="csub" id="cmpSubSub">Comparação das 40 amostras</div><div class="cwrap-lg"><canvas id="cCmpSub"></canvas></div></div>
   </section>
   <section>
-    <div class="cc"><div class="ctitle">Perfil de Corrente — Descida</div><div class="csub">Comparação das 10 amostras de descida entre os ciclos selecionados</div><div class="cwrap-lg"><canvas id="cCmpDes"></canvas></div></div>
+    <div class="cc"><div class="ctitle">Perfil de Corrente — Descida</div><div class="csub" id="cmpDesSub">Comparação das 10 amostras de descida</div><div class="cwrap-lg"><canvas id="cCmpDes"></canvas></div></div>
   </section>
 </div>
 
+<!-- TEMPO -->
 <div class="page" id="p-tempo">
-  <section><div class="slabel"><span>duração por ciclo</span></div><div class="cc"><div class="ctitle">Duração por Ciclo — Subida e Descida (s)</div><div class="csub">Tempo real de cada ciclo (leitura atual − anterior)</div><div class="cwrap-lg"><canvas id="cTempoSD"></canvas></div></div></section>
+  <section><div class="slabel"><span>duração por ciclo</span></div><div class="cc"><div class="ctitle">Duração por Ciclo — Subida e Descida (s)</div><div class="csub">Tempo real de cada ciclo (leitura atual − anterior) · picos filtrados automaticamente</div><div class="cwrap-lg"><canvas id="cTempoSD"></canvas></div></div></section>
   <section><div class="slabel"><span>motor ativo por ciclo</span></div><div class="cc"><div class="ctitle">Tempo Motor Ativo por Ciclo (s)</div><div class="csub">Duração real de funcionamento por ciclo (subida + descida)</div><div class="cwrap-lg"><canvas id="cTempoAtivo"></canvas></div></div></section>
   <section><div class="slabel"><span>tempo total acumulado</span></div><div class="info-total" id="infoTotal">—</div></section>
 </div>
@@ -174,11 +210,14 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
 
 <script>
 const CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vTT_fV0-_DuNAf73kbS5keUJqj9aEkfrWLu0OPQNorC3bmLT_hpb5aAvWITR7E94CfoMeHOTuYJ4S6n/pub?output=csv';
+const CSV_SETUP='https://docs.google.com/spreadsheets/d/e/2PACX-1vTT_fV0-_DuNAf73kbS5keUJqj9aEkfrWLu0OPQNorC3bmLT_hpb5aAvWITR7E94CfoMeHOTuYJ4S6n/pub?gid=1684132783&single=true&output=csv';
 const I={DATA:0,HORA:1,CICLOS:2,T_SUB:3,SUB_START:4,T_DES:44,DES_START:45,T_ATIVO:55,T_TOTAL:56};
-let DATA=[],CH={},TM=null;
 
-document.getElementById('logoImg').src='data:image/png;base64,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';
+let DATA=[],SETUP=[],CH={},TM=null,MODO='ciclo';
 
+document.getElementById('logoImg').src='data:image/png;base64,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';';
+
+// ── Parse CSV ──
 function parseCSV(txt){
   const lines=txt.trim().split('\n');
   return lines.slice(1).filter(l=>l.trim()).map(line=>{
@@ -189,23 +228,28 @@ function parseCSV(txt){
   });
 }
 
+// Parse Setup → array de objetos com colunas nomeadas
+function parseSetupCSV(txt){
+  const lines=txt.trim().split('\n');
+  if(lines.length<2)return[];
+  const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).filter(l=>l.trim()).map(line=>{
+    const vals=[];let cur='',inQ=false;
+    for(const ch of line){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){vals.push(cur.trim());cur='';}else cur+=ch;}
+    vals.push(cur.trim());
+    const row={};
+    headers.forEach((h,i)=>{const v=(vals[i]||'').replace(/^"|"$/g,'').trim();row[h]=isNaN(parseFloat(v))||v===''?v:parseFloat(v);});
+    return row;
+  });
+}
+
+// ── Helpers ──
 const g=(row,i)=>row[i]??null;
 const num=(row,i)=>{const v=g(row,i);return typeof v==='number'?v:null;};
 const f=(v,d=2)=>typeof v==='number'&&!isNaN(v)?v.toFixed(d):'—';
 const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
-const fmtMin=v=>{
-  if(typeof v!=='number'||isNaN(v))return '—';
-  const m=v/60;
-  if(m<60)return `${Math.round(m)} min`;
-  const h=Math.floor(m/60),mn=Math.round(m%60);
-  return mn>0?`${h}h ${mn}min`:`${h}h`;
-};
-const fmtHora=v=>{
-  if(typeof v!=='number'||isNaN(v))return '—';
-  if(v<60)return `${Math.round(v)} min`;
-  const h=Math.floor(v/60),mn=Math.round(v%60);
-  return mn>0?`${h}h ${mn}min`:`${h}h`;
-};
+const fmtMin=v=>{if(typeof v!=='number'||isNaN(v))return'—';const m=v/60;if(m<60)return`${Math.round(m)} min`;const h=Math.floor(m/60),mn=Math.round(m%60);return mn>0?`${h}h ${mn}min`:`${h}h`;};
+const fmtHora=v=>{if(typeof v!=='number'||isNaN(v))return'—';if(v<60)return`${Math.round(v)} min`;const h=Math.floor(v/60),mn=Math.round(v%60);return mn>0?`${h}h ${mn}min`:`${h}h`;};
 
 function getSub(row){return Array.from({length:40},(_,i)=>num(row,I.SUB_START+i)).filter(v=>v!==null);}
 function getDes(row){return Array.from({length:10},(_,i)=>num(row,I.DES_START+i)).filter(v=>v!==null);}
@@ -218,6 +262,38 @@ function enrich(data){
   });
 }
 
+// ── Setup: detecta configuração de um ciclo ──
+// Espera colunas: "Ciclo Inicio", "Bucha", "Carga Assento", "Carga Encosto", "Molas Gas"
+function getSetupForCiclo(ciclo){
+  if(!SETUP.length)return null;
+  // Detecta automaticamente o nome da coluna de ciclo (primeira coluna numérica)
+  const cicloKey=Object.keys(SETUP[0])[0];
+  let match=null;
+  for(const s of SETUP){
+    const ci=parseFloat(s[cicloKey]);
+    if(!isNaN(ci)&&ci<=ciclo)match=s;
+  }
+  return match;
+}
+
+function setupLabel(s){
+  if(!s)return'—';
+  const keys=Object.keys(s);
+  const cicloKey=keys[0];
+  // Monta label resumido
+  const parts=[];
+  keys.slice(1).forEach(k=>{if(s[k]!==''&&s[k]!==null&&s[k]!==undefined)parts.push(`${k}: ${s[k]}`);});
+  return parts.join(' · ')||`Ciclo ${s[cicloKey]}+`;
+}
+
+function setupName(s){
+  if(!s)return'—';
+  const keys=Object.keys(s);
+  const cicloKey=keys[0];
+  return`A partir do ciclo ${s[cicloKey]}`;
+}
+
+// ── Tabs ──
 function goTab(id,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -227,6 +303,17 @@ function goTab(id,el){
   if(id==='comparador')renderComparador();
 }
 
+// ── Modo comparador ──
+function setModo(modo){
+  MODO=modo;
+  document.getElementById('btnModoCiclo').classList.toggle('active',modo==='ciclo');
+  document.getElementById('btnModoSetup').classList.toggle('active',modo==='setup');
+  document.getElementById('cmpCicloPanel').style.display=modo==='ciclo'?'':'none';
+  document.getElementById('cmpSetupPanel').style.display=modo==='setup'?'':'none';
+  renderComparador();
+}
+
+// ── Chart defaults ──
 const CO=()=>({
   responsive:true,maintainAspectRatio:false,animation:{duration:400},
   plugins:{legend:{labels:{color:'#71706e',font:{family:'Arial',size:10},boxWidth:10,padding:10}}},
@@ -237,6 +324,7 @@ const CO=()=>({
 });
 function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 
+// ══ RESUMO ══
 function renderResumo(){
   if(!DATA.length)return;
   const last=DATA[DATA.length-1];
@@ -248,29 +336,64 @@ function renderResumo(){
     <div class="kpi"><div class="kpi-lbl">Tempo Motor Ativo</div><div class="kpi-val">${fmtMin(num(last,I.T_ATIVO))}</div><div class="kpi-sub">acumulado até este ciclo</div></div>
     <div class="kpi"><div class="kpi-lbl">Tempo Total de Teste</div><div class="kpi-val">${fmtHora(num(last,I.T_TOTAL))}</div><div class="kpi-sub">inclui descanso do motor</div></div>`;
 
-  const thead='<tr><th>Ciclos</th><th>Data</th><th>Hora</th><th>T.Sub (min)</th><th>T.Des (min)</th><th>T.Ativo (min)</th><th>T.Total (h)</th></tr>';
-  const tbody=DATA.slice(-15).reverse().map(row=>`
-    <tr>
-      <td class="hi">${num(row,I.CICLOS)??'—'}</td>
+  // Setup card
+  renderSetupCard();
+
+  const thead='<tr><th>Ciclos</th><th>Data</th><th>Hora</th><th>Configuração</th><th>T.Sub (min)</th><th>T.Des (min)</th><th>T.Ativo (min)</th></tr>';
+  const tbody=DATA.slice(-15).reverse().map(row=>{
+    const cx=num(row,I.CICLOS);
+    const s=getSetupForCiclo(cx);
+    const slbl=s?setupLabel(s):'—';
+    return`<tr>
+      <td class="hi">${cx??'—'}</td>
       <td>${g(row,I.DATA)||'—'}</td><td>${g(row,I.HORA)||'—'}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis" title="${slbl}">${slbl}</td>
       <td>${fmtMin(num(row,I.T_SUB))}</td><td>${fmtMin(num(row,I.T_DES))}</td>
-      <td>${fmtMin(num(row,I.T_ATIVO))}</td><td>${fmtHora(num(row,I.T_TOTAL))}</td>
-    </tr>`).join('');
+      <td>${fmtMin(num(row,I.T_ATIVO))}</td>
+    </tr>`;}).join('');
   document.getElementById('tableBox').innerHTML=`<table><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
 }
 
+function renderSetupCard(){
+  if(!SETUP.length){document.getElementById('setupCard').innerHTML='<span style="color:var(--fnt);font-size:11px">Nenhuma configuração encontrada na aba Setup</span>';return;}
+  const CL=['badge-blu','badge-grn','badge-amb','badge-pur','badge-gray'];
+  const cicloKey=Object.keys(SETUP[0])[0];
+  const html=SETUP.map((s,i)=>{
+    const keys=Object.keys(s).slice(1);
+    const items=keys.map(k=>`<div class="setup-item"><div class="setup-item-lbl">${k}</div><div class="setup-item-val">${s[k]||'—'}</div></div>`).join('');
+    return`<div style="display:flex;flex-direction:column;gap:8px;padding:12px 16px;border:1px solid var(--brd);border-radius:var(--r);background:var(--bg);min-width:180px">
+      <span class="badge ${CL[i%CL.length]}" style="align-self:flex-start">A partir do ciclo ${s[cicloKey]}</span>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">${items}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('setupCard').innerHTML=html;
+}
+
+// ══ SELECTS ══
 function populateSelects(){
   const opts=DATA.map((row,i)=>`<option value="${i}">${num(row,I.CICLOS)??i+1}</option>`).join('');
   document.getElementById('selCiclo').innerHTML=opts;
   document.getElementById('selCiclo').value=DATA.length-1;
+
   const optsC=DATA.map((row,i)=>`<option value="${i}">Ciclo ${num(row,I.CICLOS)??i+1}</option>`).join('');
   document.getElementById('cmpA').innerHTML=optsC;
   document.getElementById('cmpB').innerHTML=optsC;
   document.getElementById('cmpB').value=DATA.length-1;
   document.getElementById('cmpC').innerHTML='<option value="">— nenhum —</option>'+optsC;
   document.getElementById('cmpA').value=0;
+
+  // Selects por configuração
+  if(SETUP.length){
+    const cicloKey=Object.keys(SETUP[0])[0];
+    const optsS=SETUP.map((s,i)=>`<option value="${i}">${setupLabel(s)}</option>`).join('');
+    document.getElementById('cmpSA').innerHTML=optsS;
+    document.getElementById('cmpSB').innerHTML=optsS;
+    if(SETUP.length>1)document.getElementById('cmpSB').value=1;
+    document.getElementById('cmpSC').innerHTML='<option value="">— nenhum —</option>'+optsS;
+  }
 }
 
+// ══ PERFIL ══
 function renderPerfil(){
   const idx=parseInt(document.getElementById('selCiclo').value);
   const row=DATA[idx];if(!row)return;
@@ -280,7 +403,17 @@ function renderPerfil(){
   const dS=[...vS,...new Array(vD.length).fill(null)];
   const dD=[...new Array(vS.length).fill(null),...vD];
   const mS=avg(vS),pS=Math.max(...vS),mD=avg(vD),pD=Math.max(...vD);
-  document.getElementById('perfilTitle').textContent=`Ciclo ${num(row,I.CICLOS)??idx+1}`;
+  const cx=num(row,I.CICLOS)??idx+1;
+  document.getElementById('perfilTitle').textContent=`Ciclo ${cx}`;
+
+  // Badge da configuração ativa
+  const s=getSetupForCiclo(cx);
+  const badge=document.getElementById('perfilSetupBadge');
+  if(s){
+    badge.className='badge badge-gray';
+    badge.textContent=setupLabel(s);
+  } else {badge.textContent='';}
+
   dc('cPerfil');
   CH.cPerfil=new Chart(document.getElementById('cPerfil'),{type:'line',data:{labels,datasets:[
     {label:'Subindo (A)',data:dS,borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.4,pointRadius:3,pointHoverRadius:5,borderWidth:1.5,fill:true,spanGaps:false},
@@ -288,6 +421,7 @@ function renderPerfil(){
     {label:`Média Sub ${f(mS,3)}A`,data:labels.map((_,i)=>i<vS.length?mS:null),borderColor:'#2563eb55',borderDash:[4,4],pointRadius:0,borderWidth:1,spanGaps:false},
     {label:`Média Des ${f(mD,3)}A`,data:labels.map((_,i)=>i>=vS.length?mD:null),borderColor:'#16a34a55',borderDash:[4,4],pointRadius:0,borderWidth:1,spanGaps:false},
   ]},options:CO()});
+
   const dtS=idx>0?num(row,I.T_SUB)-num(DATA[idx-1],I.T_SUB):num(row,I.T_SUB);
   const dtD=idx>0?num(row,I.T_DES)-num(DATA[idx-1],I.T_DES):num(row,I.T_DES);
   document.getElementById('perfilStats').innerHTML=`
@@ -299,13 +433,13 @@ function renderPerfil(){
     <div class="kpi"><div class="kpi-lbl">Duração Descendo</div><div class="kpi-val">${f(dtD,2)}<span class="kpi-unit">s</span></div><div class="kpi-sub">neste ciclo</div></div>`;
 }
 
+// ══ TENDÊNCIA ══
 function linReg(ys){
   const n=ys.length;if(!n)return[];
   const xs=Array.from({length:n},(_,i)=>i),mx=avg(xs),my=avg(ys);
   const b=xs.reduce((s,x,i)=>s+(x-mx)*(ys[i]-my),0)/xs.reduce((s,x)=>s+(x-mx)**2,0)||0;
   return xs.map(x=>+(my+b*(x-mx)).toFixed(4));
 }
-
 function renderTendencia(){
   const val=DATA.filter(r=>r._mS!==null);if(!val.length)return;
   const lb=val.map(r=>num(r,I.CICLOS)??'');
@@ -329,34 +463,81 @@ function renderTendencia(){
   ]},options:CO()});
 }
 
+// ══ COMPARADOR ══
+// Calcula perfil médio de um conjunto de rows
+function avgPerfil(rows,getFn,len){
+  const matrix=rows.map(r=>getFn(r));
+  return Array.from({length:len},(_,i)=>{
+    const vals=matrix.map(a=>a[i]).filter(v=>typeof v==='number'&&!isNaN(v));
+    return vals.length?+avg(vals).toFixed(4):null;
+  });
+}
+
 function renderComparador(){
-  const ia=parseInt(document.getElementById('cmpA').value);
-  const ib=parseInt(document.getElementById('cmpB').value);
-  const icStr=document.getElementById('cmpC').value;
-  const ic=icStr!==''?parseInt(icStr):null;
-  const rows=[DATA[ia],DATA[ib],...(ic!==null&&DATA[ic]?[DATA[ic]]:[])].filter(Boolean);
-  if(rows.length<2)return;
   const CL=['#2563eb','#16a34a','#d97706'];
   const lblS=Array.from({length:40},(_,i)=>`S${i+1}`);
   const lblD=Array.from({length:10},(_,i)=>`D${i+1}`);
-  const mk=(row,fn,color,label)=>({label,data:fn(row),borderColor:color,backgroundColor:color+'18',tension:.4,pointRadius:3,borderWidth:1.5,fill:false});
+  const mk=(data,color,label)=>({label,data,borderColor:color,backgroundColor:color+'18',tension:.4,pointRadius:3,borderWidth:1.5,fill:false});
+
+  let datasetsSub=[],datasetsDes=[];
+
+  if(MODO==='ciclo'){
+    const ia=parseInt(document.getElementById('cmpA').value);
+    const ib=parseInt(document.getElementById('cmpB').value);
+    const icStr=document.getElementById('cmpC').value;
+    const ic=icStr!==''?parseInt(icStr):null;
+    const rows=[DATA[ia],DATA[ib],...(ic!==null&&DATA[ic]?[DATA[ic]]:[])].filter(Boolean);
+    if(rows.length<2)return;
+    datasetsSub=rows.map((r,i)=>mk(getSub(r),CL[i],`Ciclo ${num(r,I.CICLOS)??i+1} ↑`));
+    datasetsDes=rows.map((r,i)=>mk(getDes(r),CL[i],`Ciclo ${num(r,I.CICLOS)??i+1} ↓`));
+    document.getElementById('cmpSubSub').textContent='Comparação das 40 amostras entre os ciclos selecionados';
+    document.getElementById('cmpDesSub').textContent='Comparação das 10 amostras de descida entre os ciclos selecionados';
+  } else {
+    if(!SETUP.length)return;
+    const cicloKey=Object.keys(SETUP[0])[0];
+    const ia=parseInt(document.getElementById('cmpSA').value);
+    const ib=parseInt(document.getElementById('cmpSB').value);
+    const icStr=document.getElementById('cmpSC').value;
+    const ic=icStr!==''?parseInt(icStr):null;
+    const setups=[SETUP[ia],SETUP[ib],...(ic!==null&&SETUP[ic]?[SETUP[ic]]:[])].filter(Boolean);
+    if(setups.length<2)return;
+
+    setups.forEach((s,i)=>{
+      const ciIni=parseFloat(s[cicloKey]);
+      const ciFim=i+1<SETUP.length?parseFloat(SETUP[i+1]?.[cicloKey]??Infinity):Infinity;
+      const rows=DATA.filter(r=>{const cx=num(r,I.CICLOS);return cx>=ciIni&&cx<ciFim&&r._mS!==null;});
+      const label=setupLabel(s);
+      datasetsSub.push(mk(avgPerfil(rows,getSub,40),CL[i],`${label} ↑`));
+      datasetsDes.push(mk(avgPerfil(rows,getDes,10),CL[i],`${label} ↓`));
+    });
+    document.getElementById('cmpSubSub').textContent='Média das 40 amostras de subida por configuração';
+    document.getElementById('cmpDesSub').textContent='Média das 10 amostras de descida por configuração';
+  }
+
   dc('cCmpSub');
-  CH.cCmpSub=new Chart(document.getElementById('cCmpSub'),{type:'line',data:{labels:lblS,
-    datasets:rows.map((r,i)=>mk(r,getSub,CL[i],`Ciclo ${num(r,I.CICLOS)??i+1} ↑`))},options:CO()});
+  CH.cCmpSub=new Chart(document.getElementById('cCmpSub'),{type:'line',data:{labels:lblS,datasets:datasetsSub},options:CO()});
   dc('cCmpDes');
-  CH.cCmpDes=new Chart(document.getElementById('cCmpDes'),{type:'line',data:{labels:lblD,
-    datasets:rows.map((r,i)=>mk(r,getDes,CL[i],`Ciclo ${num(r,I.CICLOS)??i+1} ↓`))},options:CO()});
+  CH.cCmpDes=new Chart(document.getElementById('cCmpDes'),{type:'line',data:{labels:lblD,datasets:datasetsDes},options:CO()});
 }
 
+// ══ TEMPO ══
+function mediana(arr){
+  const s=[...arr].filter(v=>v!==null).sort((a,b)=>a-b);
+  if(!s.length)return null;
+  const m=Math.floor(s.length/2);
+  return s.length%2?s[m]:(s[m-1]+s[m])/2;
+}
 function deltas(colIdx){
-  return DATA.map((r,i)=>{
+  const raw=DATA.map((r,i)=>{
     if(i===0)return null;
     const cur=num(r,colIdx),prev=num(DATA[i-1],colIdx);
     if(cur===null||prev===null)return null;
     const d=cur-prev;return d>=0?+d.toFixed(3):null;
   });
+  const med=mediana(raw);
+  if(!med)return raw;
+  return raw.map(v=>v!==null&&v>med*1.6?null:v);
 }
-
 function renderTempo(){
   const lb=DATA.map(r=>num(r,I.CICLOS)??'');
   dc('cTempoSD');
@@ -377,21 +558,33 @@ function renderTempo(){
     &nbsp;·&nbsp; Motor ativo acumulado: <strong>${fmtMin(num(last,I.T_ATIVO))}</strong>`;
 }
 
+// ══ LOAD ══
 async function loadData(){
   const btn=document.getElementById('btnR');
   btn.disabled=true;btn.classList.add('spin');
   document.getElementById('lu').textContent='atualizando...';
   clearTimeout(TM);
   try{
-    const res=await fetch(CSV+'&t='+Date.now());
-    if(!res.ok)throw new Error(`HTTP ${res.status}`);
-    const parsed=parseCSV(await res.text());
+    // Carrega dados e setup em paralelo
+    const [resData,resSetup]=await Promise.all([
+      fetch(CSV+'&t='+Date.now()),
+      fetch(CSV_SETUP+'&t='+Date.now())
+    ]);
+    const [txtData,txtSetup]=await Promise.all([resData.text(),resSetup.text()]);
+
+    const parsed=parseCSV(txtData);
     if(!parsed.length)throw new Error('sem dados');
-    DATA=parsed;enrich(DATA);populateSelects();renderResumo();renderPerfil();
+    DATA=parsed;enrich(DATA);
+
+    try{SETUP=parseSetupCSV(txtSetup);}catch(e){SETUP=[];}
+
+    populateSelects();renderResumo();renderPerfil();
+
     const at=document.querySelector('.tab.active')?.textContent?.trim();
     if(at==='TENDÊNCIA')renderTendencia();
     if(at==='TEMPO DE CICLO')renderTempo();
     if(at==='COMPARADOR')renderComparador();
+
     const now=new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
     document.getElementById('lu').textContent=now;
     const last=DATA[DATA.length-1];
