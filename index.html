@@ -1,11 +1,9 @@
-@@ -1,410 +1,410 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<!-- v3 -->
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Análise de Retirada das Molas Gás</title>
+<title>Análise de Retirada de Molas Gás</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -16,11 +14,8 @@
   --r:6px;--rl:10px;
 }
 body{background:var(--bg);color:var(--txt);font-family:Arial,sans-serif;font-size:14px;line-height:1.5}
-header{background:var(--sur);border-bottom:1px solid var(--brd);padding:0 36px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 header{background:var(--sur);border-bottom:1px solid var(--brd);padding:0 36px;height:72px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .hlogo{display:flex;align-items:center;gap:20px}
-.hlogo img{height:46px;width:auto}
-.hdivider{width:1px;height:38px;background:var(--brd2)}
 .hlogo img{height:64px;width:auto}
 .hdivider{width:1px;height:44px;background:var(--brd2)}
 .htitle{font-size:13px;font-weight:700;color:var(--txt)}
@@ -51,7 +46,7 @@ section{margin-bottom:32px}
 .kpi-val{font-family:Arial,sans-serif;font-size:22px;font-weight:700;color:var(--txt);line-height:1}
 .kpi-unit{font-family:Arial,sans-serif;font-size:10px;color:var(--mut);margin-left:2px}
 .kpi-sub{font-family:Arial,sans-serif;font-size:9px;color:var(--mut);margin-top:5px}
-.info-total{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 20px;display:flex;align-items:center;gap:10px;font-family:Arial,sans-serif;font-size:12px;color:var(--mut)}
+.info-total{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 20px;display:flex;align-items:center;gap:10px;font-family:Arial,sans-serif;font-size:12px;color:var(--mut);flex-wrap:wrap}
 .info-total strong{font-family:Arial,sans-serif;color:var(--txt);font-size:14px}
 .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(450px,1fr));gap:14px}
 .cc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:18px 22px 14px}
@@ -63,7 +58,7 @@ section{margin-bottom:32px}
 .ctrl-label{font-family:Arial,sans-serif;font-size:10px;font-weight:700;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 select{font-family:Arial,sans-serif;font-size:11px;background:var(--sur);border:1px solid var(--brd2);border-radius:var(--r);color:var(--txt);padding:5px 10px;cursor:pointer;outline:none}
 select:focus{border-color:var(--txt)}
-.badge{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:4px;border:1px solid}
+.badge{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
 .badge-blu{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
 .badge-grn{background:#f0fdf4;border-color:#bbf7d0;color:#15803d}
 .badge-amb{background:#fffbeb;border-color:#fde68a;color:#92400e}
@@ -95,7 +90,7 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
     <img id="logoImg" src="" alt="Olsen"/>
     <div class="hdivider"></div>
     <div>
-      <div class="htitle">Análise de Retirada das Molas Gás — Sistema com 10%FB e 90%Nylon</div>
+      <div class="htitle">Análise de Retirada de Molas Gás — Sistema com 10%FB e 90%Nylon</div>
       <div class="hsub">Monitoramento Contínuo · Fuso + Bucha 10FV / 90NY</div>
     </div>
   </div>
@@ -169,7 +164,7 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
 </div>
 
 <div class="page" id="p-tempo">
-  <section><div class="slabel"><span>duração por ciclo</span></div><div class="cc"><div class="ctitle">Duração por Ciclo — Subida e Descida (s)</div><div class="csub">Tempo real de cada ciclo (leitura atual − anterior)</div><div class="cwrap-lg"><canvas id="cTempoSD"></canvas></div></div></section>
+  <section><div class="slabel"><span>duração por ciclo</span></div><div class="cc"><div class="ctitle">Duração por Ciclo — Subida e Descida (s)</div><div class="csub">Tempo real de cada ciclo (leitura atual − anterior) · picos filtrados automaticamente</div><div class="cwrap-lg"><canvas id="cTempoSD"></canvas></div></div></section>
   <section><div class="slabel"><span>motor ativo por ciclo</span></div><div class="cc"><div class="ctitle">Tempo Motor Ativo por Ciclo (s)</div><div class="csub">Duração real de funcionamento por ciclo (subida + descida)</div><div class="cwrap-lg"><canvas id="cTempoAtivo"></canvas></div></div></section>
   <section><div class="slabel"><span>tempo total acumulado</span></div><div class="info-total" id="infoTotal">—</div></section>
 </div>
@@ -197,19 +192,8 @@ const g=(row,i)=>row[i]??null;
 const num=(row,i)=>{const v=g(row,i);return typeof v==='number'?v:null;};
 const f=(v,d=2)=>typeof v==='number'&&!isNaN(v)?v.toFixed(d):'—';
 const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
-const fmtMin=v=>{
-  if(typeof v!=='number'||isNaN(v))return '—';
-  const m=v/60;
-  if(m<60)return `${Math.round(m)} min`;
-  const h=Math.floor(m/60),mn=Math.round(m%60);
-  return mn>0?`${h}h ${mn}min`:`${h}h`;
-};
-const fmtHora=v=>{
-  if(typeof v!=='number'||isNaN(v))return '—';
-  if(v<60)return `${Math.round(v)} min`;
-  const h=Math.floor(v/60),mn=Math.round(v%60);
-  return mn>0?`${h}h ${mn}min`:`${h}h`;
-};
+const fmtMin=v=>{if(typeof v!=='number'||isNaN(v))return'—';const m=v/60;if(m<60)return`${Math.round(m)} min`;const h=Math.floor(m/60),mn=Math.round(m%60);return mn>0?`${h}h ${mn}min`:`${h}h`;};
+const fmtHora=v=>{if(typeof v!=='number'||isNaN(v))return'—';if(v<60)return`${Math.round(v)} min`;const h=Math.floor(v/60),mn=Math.round(v%60);return mn>0?`${h}h ${mn}min`:`${h}h`;};
 
 function getSub(row){return Array.from({length:40},(_,i)=>num(row,I.SUB_START+i)).filter(v=>v!==null);}
 function getDes(row){return Array.from({length:10},(_,i)=>num(row,I.DES_START+i)).filter(v=>v!==null);}
@@ -267,7 +251,6 @@ function populateSelects(){
   const opts=DATA.map((row,i)=>`<option value="${i}">${num(row,I.CICLOS)??i+1}</option>`).join('');
   document.getElementById('selCiclo').innerHTML=opts;
   document.getElementById('selCiclo').value=DATA.length-1;
-  const optsC=DATA.map((row,i)=>`<option value="${i}">Ciclo ${num(row,I.CICLOS)??i+1} — ${g(row,I.DATA)||''}</option>`).join('');
   const optsC=DATA.map((row,i)=>`<option value="${i}">Ciclo ${num(row,I.CICLOS)??i+1}</option>`).join('');
   document.getElementById('cmpA').innerHTML=optsC;
   document.getElementById('cmpB').innerHTML=optsC;
@@ -353,27 +336,33 @@ function renderComparador(){
     datasets:rows.map((r,i)=>mk(r,getDes,CL[i],`Ciclo ${num(r,I.CICLOS)??i+1} ↓`))},options:CO()});
 }
 
+function mediana(arr){
+  const s=[...arr].filter(v=>v!==null).sort((a,b)=>a-b);
+  if(!s.length)return null;
+  const m=Math.floor(s.length/2);
+  return s.length%2?s[m]:(s[m-1]+s[m])/2;
+}
 function deltas(colIdx){
-  return DATA.map((r,i)=>{
+  const raw=DATA.map((r,i)=>{
     if(i===0)return null;
     const cur=num(r,colIdx),prev=num(DATA[i-1],colIdx);
     if(cur===null||prev===null)return null;
     const d=cur-prev;return d>=0?+d.toFixed(3):null;
   });
+  const med=mediana(raw);
+  if(!med)return raw;
+  return raw.map(v=>v!==null&&v>med*1.6?null:v);
 }
 
 function renderTempo(){
   const lb=DATA.map(r=>num(r,I.CICLOS)??'');
   dc('cTempoSD');
   CH.cTempoSD=new Chart(document.getElementById('cTempoSD'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Subida (s)',data:deltas(I.T_SUB),borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.5,pointRadius:0,borderWidth:1.5,fill:true,spanGaps:false},
-    {label:'Descida (s)',data:deltas(I.T_DES),borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.5,pointRadius:0,borderWidth:1.5,fill:true,spanGaps:false},
     {label:'Subida (s)',data:deltas(I.T_SUB),borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#2563eb',borderWidth:1.5,fill:true,spanGaps:false},
     {label:'Descida (s)',data:deltas(I.T_DES),borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#16a34a',borderWidth:1.5,fill:true,spanGaps:false},
   ]},options:CO()});
   dc('cTempoAtivo');
   CH.cTempoAtivo=new Chart(document.getElementById('cTempoAtivo'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Motor Ativo (s)',data:deltas(I.T_ATIVO),borderColor:'#7c3aed',backgroundColor:'#7c3aed0d',tension:.5,pointRadius:0,borderWidth:1.5,fill:true,spanGaps:false},
     {label:'Motor Ativo (s)',data:deltas(I.T_ATIVO),borderColor:'#7c3aed',backgroundColor:'#7c3aed0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#7c3aed',borderWidth:1.5,fill:true,spanGaps:false},
   ]},options:CO()});
   const last=DATA[DATA.length-1];
