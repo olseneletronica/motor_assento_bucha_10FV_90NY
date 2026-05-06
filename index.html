@@ -103,8 +103,8 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
     <img id="logoImg" src="" alt="Olsen"/>
     <div class="hdivider"></div>
     <div>
-      <div class="htitle">Análise de Retirada de Molas Gás</div>
-      <div class="hsub">Monitoramento Contínuo</div>
+      <div class="htitle">Análise de Retirada de Molas Gás </div>
+      <div class="hsub">Monitoramento Contínuo · Fuso + Bucha 10FV / 90NY</div>
     </div>
   </div>
   <div class="hright">
@@ -591,7 +591,7 @@ async function loadData(){
     const now=new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
     document.getElementById('lu').textContent=now;
     const last=DATA[DATA.length-1];
-    document.getElementById('ft').textContent=`Olsen Eletrônica · motor_assento_bucha_10FV_90NY · ${num(last,I.CICLOS)??'?'} ciclos · ${now} · auto-refresh 60s`;
+    document.getElementById('ft').textContent=`Olsen Eletrônica · motor_assento_bucha · ${num(last,I.CICLOS)??'?'} ciclos · ${now} · auto-refresh 60s`;
   }catch(e){
     document.getElementById('kpiGrid').innerHTML=`<div class="sbox"><span>erro: ${e.message}</span></div>`;
     document.getElementById('lu').textContent='erro';console.error(e);
