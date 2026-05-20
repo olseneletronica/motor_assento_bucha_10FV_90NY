@@ -3,99 +3,141 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Análise de Retirada de Molas Gás</title>
+<title>Análise Motor Com Pausa — Olsen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f5f4f1;--sur:#fff;--brd:#e4e1db;--brd2:#c8c4bc;
-  --txt:#18181b;--mut:#71706e;--fnt:#bbb8b2;
-  --blu:#2563eb;--grn:#16a34a;--amb:#d97706;--red:#dc2626;--pur:#7c3aed;
-  --r:6px;--rl:10px;
+  --bg:#f4f5f7;--bg2:#ffffff;--bg3:#eef0f3;--sur:#ffffff;--sur2:#f4f5f7;
+  --brd:#e2e5ea;--brd2:#cdd1d9;--txt:#1a1d23;--txt2:#4b5263;--txt3:#8c93a3;
+  --acc:#2563eb;--acc2:#1d4ed8;--grn:#16a34a;--amb:#d97706;--red:#dc2626;
+  --pur:#7c3aed;--cya:#0891b2;--r:6px;--rl:10px;
+  --mono:'Inter',sans-serif;--sans:'Inter',sans-serif;
 }
-body{background:var(--bg);color:var(--txt);font-family:Arial,sans-serif;font-size:14px;line-height:1.5}
-header{background:var(--sur);border-bottom:1px solid var(--brd);padding:0 36px;height:72px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.hlogo{display:flex;align-items:center;gap:20px}
-.hlogo img{height:64px;width:auto}
-.hdivider{width:1px;height:44px;background:var(--brd2)}
-.htitle{font-size:13px;font-weight:700;color:var(--txt)}
-.hsub{font-size:9px;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
-.hright{display:flex;align-items:center;gap:14px}
-.live{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--mut)}
-.dot{width:5px;height:5px;border-radius:50%;background:var(--grn)}
-.btn{display:flex;align-items:center;gap:5px;background:var(--sur);border:1px solid var(--brd2);border-radius:var(--r);color:var(--txt);font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;padding:5px 12px;cursor:pointer;transition:background .15s,border-color .15s}
-.btn:hover{background:var(--bg);border-color:var(--txt)}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.5}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:14px;line-height:1.5;min-height:100vh}
+header{background:var(--bg2);border-bottom:1px solid var(--brd);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hlogo{display:flex;align-items:center;gap:16px}
+.hdivider{width:1px;height:36px;background:var(--brd2)}
+.htitle{font-size:13px;font-weight:600;color:var(--txt);letter-spacing:.01em}
+.hsub{font-size:10px;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;font-family:var(--mono)}
+.hright{display:flex;align-items:center;gap:12px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--grn);box-shadow:0 0 5px #16a34a88;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.live-label{font-size:10px;color:var(--txt3);font-family:var(--mono)}
+.btn{display:flex;align-items:center;gap:6px;background:var(--sur2);border:1px solid var(--brd2);border-radius:var(--r);color:var(--txt2);font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;padding:6px 14px;cursor:pointer;transition:all .15s}
+.btn:hover{background:var(--brd2);color:var(--txt);border-color:var(--txt3)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.8}
 .btn.spin svg{animation:rot .8s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
-.tabs{background:var(--sur);border-bottom:1px solid var(--brd);padding:0 36px;display:flex;overflow-x:auto}
-.tab{font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:13px 16px;cursor:pointer;color:var(--mut);border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
-.tab:hover{color:var(--txt)}
-.tab.active{color:var(--txt);border-bottom-color:var(--txt)}
-.page{display:none;padding:28px 36px;max-width:1360px;margin:0 auto}
+nav{background:var(--bg2);border-bottom:1px solid var(--brd);padding:0 32px;display:flex;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tab{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:14px 16px;cursor:pointer;color:var(--txt3);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.tab:hover{color:var(--txt2)}
+.tab.active{color:var(--acc);border-bottom-color:var(--acc)}
+.page{display:none;padding:28px 32px;max-width:1440px;margin:0 auto}
 .page.active{display:block}
-section{margin-bottom:32px}
-.slabel{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.slabel span{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--fnt);white-space:nowrap}
+.slabel{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.slabel-text{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--txt3);white-space:nowrap}
 .slabel::after{content:'';flex:1;height:1px;background:var(--brd)}
-.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--brd);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden}
-.kpi{background:var(--sur);padding:20px 18px;transition:background .15s}
-.kpi:hover{background:#fafaf8}
-.kpi-lbl{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
-.kpi-val{font-family:Arial,sans-serif;font-size:22px;font-weight:700;color:var(--txt);line-height:1}
-.kpi-unit{font-family:Arial,sans-serif;font-size:10px;color:var(--mut);margin-left:2px}
-.kpi-sub{font-family:Arial,sans-serif;font-size:9px;color:var(--mut);margin-top:5px}
-.info-total{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 20px;display:flex;align-items:center;gap:10px;font-family:Arial,sans-serif;font-size:12px;color:var(--mut);flex-wrap:wrap}
-.info-total strong{font-family:Arial,sans-serif;color:var(--txt);font-size:14px}
-.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(450px,1fr));gap:14px}
-.cc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:18px 22px 14px}
-.ctitle{font-family:Arial,sans-serif;font-size:12px;font-weight:700;margin-bottom:2px}
-.csub{font-family:Arial,sans-serif;font-size:9px;color:var(--mut);margin-bottom:14px;letter-spacing:.03em;text-transform:uppercase}
-.cwrap{height:240px;position:relative}
+section{margin-bottom:32px}
+.kpi-grid{display:grid;gap:1px;background:var(--brd);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden}
+.kpi-grid-5{grid-template-columns:repeat(5,1fr)}
+.kpi-grid-8{grid-template-columns:repeat(8,1fr)}
+.kpi{background:var(--sur);padding:18px 16px;transition:background .15s}
+.kpi:hover{background:var(--sur2)}
+.kpi-lbl{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+.kpi-val{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--txt);line-height:1}
+.kpi-unit{font-size:11px;color:var(--txt3);margin-left:2px;font-weight:400}
+.kpi-sub{font-family:var(--mono);font-size:9px;color:var(--txt3);margin-top:5px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(460px,1fr));gap:14px}
+.cc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:20px 22px 16px}
+.ctitle{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--txt);margin-bottom:3px}
+.csub{font-family:var(--mono);font-size:9px;color:var(--txt3);margin-bottom:14px;letter-spacing:.04em;line-height:1.6}
 .cwrap-lg{height:300px;position:relative}
+.cwrap-xl{height:360px;position:relative}
+
+/* ── Configuração do ensaio ── */
+.ensaio-card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden}
+.ensaio-params{display:flex;align-items:center;gap:28px;flex-wrap:wrap;padding:14px 22px;border-bottom:1px solid var(--brd)}
+.setup-item-lbl{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);margin-bottom:3px}
+.setup-item-val{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--txt)}
+.setup-divider{width:1px;height:32px;background:var(--brd2)}
+.bucha-hist-wrap{padding:14px 22px}
+.bucha-hist-lbl{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+.bucha-hist-list{display:flex;flex-wrap:wrap;gap:8px}
+.bucha-chip{display:flex;align-items:center;gap:8px;border-radius:var(--r);padding:7px 13px;font-family:var(--mono);font-size:11px;border:1px solid}
+.bucha-chip-ciclo{font-weight:700;margin-right:2px}
+.bucha-chip-name{font-weight:400}
+
+/* ── Legenda de buchas nos gráficos ── */
+.seg-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.seg-legend-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--txt3)}
+.seg-legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
 .ctrl-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.ctrl-label{font-family:Arial,sans-serif;font-size:10px;font-weight:700;color:var(--mut);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
-select{font-family:Arial,sans-serif;font-size:11px;background:var(--sur);border:1px solid var(--brd2);border-radius:var(--r);color:var(--txt);padding:5px 10px;cursor:pointer;outline:none}
-select:focus{border-color:var(--txt)}
-.badge{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:4px;border:1px solid;white-space:nowrap}
-.badge-blu{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
-.badge-grn{background:#f0fdf4;border-color:#bbf7d0;color:#15803d}
-.badge-amb{background:#fffbeb;border-color:#fde68a;color:#92400e}
-.cmp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.ctrl-label{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--txt3);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+select{font-family:var(--mono);font-size:11px;background:var(--sur2);border:1px solid var(--brd2);border-radius:var(--r);color:var(--txt);padding:5px 10px;cursor:pointer;outline:none}
+select:focus{border-color:var(--acc)}
+select option{background:var(--bg3)}
+.badge{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.06em;padding:3px 9px;border-radius:4px;border:1px solid;white-space:nowrap}
+.badge-blu{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8}
+.badge-grn{background:#dcfce7;border-color:#86efac;color:#15803d}
+.badge-amb{background:#fef3c7;border-color:#fcd34d;color:#92400e}
+.badge-pur{background:#f3e8ff;border-color:#d8b4fe;color:#6d28d9}
+.badge-cya{background:#cffafe;border-color:#67e8f9;color:#0e7490}
+.badge-red{background:#fee2e2;border-color:#fca5a5;color:#b91c1c}
+.pausa-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.pausa-slot{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:12px 14px}
+.pausa-slot-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.min1{color:#2563eb}.min2{color:#16a34a}.min3{color:#d97706}.min4{color:#7c3aed}.min5{color:#0891b2}
+.cmp-selects{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
 .cmp-slot{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:12px 14px}
-.cmp-slot-title{font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+.cmp-slot-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--txt3);margin-bottom:6px}
 .tcard{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);overflow:hidden}
 .twrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:11px}
-thead{background:var(--bg);border-bottom:1px solid var(--brd)}
-th{text-align:left;padding:9px 12px;font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
-td{padding:8px 12px;border-bottom:1px solid var(--brd);font-family:Arial,sans-serif;color:var(--mut);white-space:nowrap;font-size:11px}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--bg3);border-bottom:1px solid var(--brd)}
+th{text-align:left;padding:10px 12px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--brd);font-family:var(--mono);color:var(--txt3);white-space:nowrap;font-size:11px}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--bg);color:var(--txt)}
-td.hi{color:var(--txt);font-weight:700}
-.sbox{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:10px;color:var(--mut);font-family:Arial,sans-serif;font-size:11px}
-.spinner{width:18px;height:18px;border:1.5px solid var(--brd2);border-top-color:var(--txt);border-radius:50%;animation:rot .7s linear infinite}
-footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-size:9px;color:var(--fnt);border-top:1px solid var(--brd);letter-spacing:.06em}
-@media(max-width:768px){
-  .page{padding:16px}.tabs{padding:0 16px}
-  .cgrid{grid-template-columns:1fr}.cmp-grid{grid-template-columns:1fr}
-  .kpi-grid{grid-template-columns:1fr 1fr}.hsub{display:none}
+tr:hover td{background:var(--bg3);color:var(--txt)}
+td.hi{color:var(--txt);font-weight:600}
+td.acc{color:var(--acc);font-weight:600}
+td.grn{color:var(--grn)}
+td.amb{color:var(--amb)}
+.sbox{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:10px;color:var(--txt3);font-family:var(--mono);font-size:11px}
+.spinner{width:18px;height:18px;border:1.5px solid var(--brd2);border-top-color:var(--acc);border-radius:50%;animation:rot .7s linear infinite}
+.info-total{background:var(--sur);border:1px solid var(--brd);border-radius:var(--rl);padding:14px 22px;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:var(--txt3);flex-wrap:wrap}
+.info-total strong{color:var(--txt);font-weight:600}
+footer{text-align:center;padding:16px 32px;font-family:var(--mono);font-size:9px;color:var(--txt3);border-top:1px solid var(--brd);letter-spacing:.08em}
+@media(max-width:900px){
+  .page{padding:16px}.kpi-grid-5,.kpi-grid-8{grid-template-columns:1fr 1fr}
+  .cgrid,.cmp-selects,.pausa-grid{grid-template-columns:1fr}
+  .ensaio-params{gap:16px}
 }
 </style>
 </head>
 <body>
+
 <header>
   <div class="hlogo">
-    <img id="logoImg" src="" alt="Olsen"/>
+    <div style="display:flex;flex-direction:column;line-height:1">
+      <span style="font-family:var(--mono);font-size:18px;font-weight:600;color:var(--txt);letter-spacing:.05em">OLSEN</span>
+      <span style="font-family:var(--mono);font-size:8px;color:var(--txt3);letter-spacing:.2em">ELETRÔNICA</span>
+    </div>
     <div class="hdivider"></div>
     <div>
-      <div class="htitle">Análise de Retirada de Molas Gás — Sistema com 10%FB e 90%Nylon</div>
-      <div class="hsub">Monitoramento Contínuo · Fuso + Bucha 10FV / 90NY</div>
+      <div class="htitle">Análise Motor — Ciclo com Pausa de 5 min</div>
+      <div class="hsub">Monitoramento Contínuo · Teste de Durabilidade</div>
     </div>
   </div>
   <div class="hright">
-    <div class="live"><div class="dot"></div><span id="lu">—</span></div>
+    <div class="live-dot"></div>
+    <span class="live-label" id="lu">—</span>
     <button class="btn" id="btnR" onclick="loadData()">
       <svg viewBox="0 0 16 16"><path d="M14 2v4h-4M2 14v-4h4"/><path d="M2.5 9A6 6 0 1113.5 9"/></svg>
       ATUALIZAR
@@ -103,106 +145,272 @@ footer{text-align:center;padding:18px 36px;font-family:Arial,sans-serif;font-siz
   </div>
 </header>
 
-<nav class="tabs">
+<nav>
   <div class="tab active" onclick="goTab('resumo',this)">RESUMO</div>
   <div class="tab" onclick="goTab('perfil',this)">PERFIL DE CORRENTE</div>
+  <div class="tab" onclick="goTab('pausa',this)">PAUSA 5 MIN</div>
   <div class="tab" onclick="goTab('tendencia',this)">TENDÊNCIA</div>
   <div class="tab" onclick="goTab('comparador',this)">COMPARADOR</div>
   <div class="tab" onclick="goTab('tempo',this)">TEMPO DE CICLO</div>
 </nav>
 
+<!-- ══ RESUMO ══ -->
 <div class="page active" id="p-resumo">
-  <section><div class="slabel"><span>métricas gerais</span></div><div class="kpi-grid" id="kpiGrid"><div class="sbox"><div class="spinner"></div><span>carregando...</span></div></div></section>
-  <section><div class="slabel"><span>últimas 15 leituras</span></div><div class="tcard"><div class="twrap" id="tableBox"></div></div></section>
+  <section>
+    <div class="slabel"><span class="slabel-text">métricas gerais</span></div>
+    <div class="kpi-grid kpi-grid-5" id="kpiGrid">
+      <div class="sbox"><div class="spinner"></div><span>carregando...</span></div>
+    </div>
+  </section>
+  <section>
+    <div class="slabel"><span class="slabel-text">configuração do ensaio</span></div>
+    <div class="ensaio-card">
+      <div class="ensaio-params" id="ensaioParams"><span style="color:var(--txt3);font-family:var(--mono);font-size:11px">Carregando...</span></div>
+      <div class="bucha-hist-wrap" id="buchaHistWrap" style="display:none">
+        <div class="bucha-hist-lbl">Histórico de Buchas Utilizadas</div>
+        <div class="bucha-hist-list" id="buchaHistList"></div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="slabel"><span class="slabel-text">últimas 15 leituras</span></div>
+    <div class="tcard"><div class="twrap" id="tableBox"></div></div>
+  </section>
 </div>
 
+<!-- ══ PERFIL ══ -->
 <div class="page" id="p-perfil">
   <section>
-    <div class="slabel"><span>perfil de corrente por ciclo</span></div>
+    <div class="slabel"><span class="slabel-text">perfil de corrente — ciclo completo</span></div>
     <div class="cc">
       <div class="ctrl-row">
         <span class="ctrl-label">Ciclo:</span>
         <select id="selCiclo" onchange="renderPerfil()"></select>
-        <span class="badge badge-blu">40 amostras ↑</span>
-        <span class="badge badge-grn">10 amostras ↓</span>
+        <span class="badge badge-blu">100 amostras ↑ subindo</span>
+        <span class="badge badge-amb">50 amostras ⏸ pausa (5×10)</span>
+        <span class="badge badge-grn">10 amostras ↓ descendo</span>
       </div>
       <div class="ctitle" id="perfilTitle">—</div>
-      <div class="csub">Corrente ao longo do curso — Subida (S1..S40) e Descida (D1..D10)</div>
-      <div class="cwrap-lg"><canvas id="cPerfil"></canvas></div>
+      <div class="csub">Corrente ao longo do ciclo completo — Subida (S1..S100) · Pausa 5 min (M1..M5 × 10 amostras) · Descida (D1..D10)<br>
+      <span style="color:var(--amb)">★ Média de subida calculada apenas com amostras ≥ 0.8 A (motor ativo)</span></div>
+      <div class="cwrap-xl"><canvas id="cPerfil"></canvas></div>
     </div>
   </section>
-  <section><div class="slabel"><span>estatísticas do ciclo selecionado</span></div><div class="kpi-grid" id="perfilStats" style="grid-template-columns:repeat(6,1fr)"></div></section>
+  <section>
+    <div class="slabel"><span class="slabel-text">estatísticas do ciclo selecionado</span></div>
+    <div class="kpi-grid kpi-grid-8" id="perfilStats">
+      <div class="sbox"><span>selecione um ciclo</span></div>
+    </div>
+  </section>
 </div>
 
+<!-- ══ PAUSA 5 MIN ══ -->
+<div class="page" id="p-pausa">
+  <section>
+    <div class="slabel"><span class="slabel-text">corrente durante pausa — 5 minutos no fim de curso</span></div>
+    <div class="cc">
+      <div class="ctrl-row">
+        <span class="ctrl-label">Ciclo:</span>
+        <select id="selPausa" onchange="renderPausa()"></select>
+        <span class="badge badge-blu">MIN 1</span><span class="badge badge-grn">MIN 2</span>
+        <span class="badge badge-amb">MIN 3</span><span class="badge badge-pur">MIN 4</span>
+        <span class="badge badge-cya">MIN 5</span>
+      </div>
+      <div class="ctitle" id="pausaTitle">—</div>
+      <div class="csub">10 amostras de corrente por minuto — monitoramento de descida indesejada na posição fim de curso</div>
+      <div class="cwrap-xl"><canvas id="cPausa"></canvas></div>
+    </div>
+  </section>
+  <section>
+    <div class="slabel"><span class="slabel-text">estatísticas de pausa por minuto</span></div>
+    <div class="pausa-grid" id="pausaStats"><div class="sbox"><span>selecione um ciclo</span></div></div>
+  </section>
+  <section>
+    <div class="slabel"><span class="slabel-text">tendência da corrente de pausa ao longo dos ciclos</span></div>
+    <div class="cgrid">
+      <div class="cc">
+        <div class="ctitle">Corrente Média por Minuto — Todos os Ciclos</div>
+        <div id="legPausaTend" class="seg-legend"></div>
+        <div class="cwrap-lg"><canvas id="cPausaTend"></canvas></div>
+      </div>
+      <div class="cc">
+        <div class="ctitle">Corrente Máxima de Pausa por Ciclo</div>
+        <div id="legPausaPico" class="seg-legend"></div>
+        <div class="cwrap-lg"><canvas id="cPausaPico"></canvas></div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="slabel"><span class="slabel-text">evolução minuto a minuto — comparativo entre ciclos</span></div>
+    <div class="cc">
+      <div class="ctitle">Média de Corrente por Minuto — Visão por Minuto</div>
+      <div class="cwrap-lg"><canvas id="cPausaMinutos"></canvas></div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ TENDÊNCIA ══ -->
 <div class="page" id="p-tendencia">
   <section>
-    <div class="slabel"><span>corrente média ao longo dos ciclos</span></div>
+    <div class="slabel"><span class="slabel-text">corrente média ao longo dos ciclos</span></div>
     <div class="cgrid">
-      <div class="cc"><div class="ctitle">Corrente Média — Subida (40 amostras)</div><div class="csub">Linha vermelha = tendência linear · crescente = desgaste progressivo</div><div class="cwrap-lg"><canvas id="cTendSub"></canvas></div></div>
-      <div class="cc"><div class="ctitle">Corrente Média — Descida (10 amostras)</div><div class="csub">Evolução da corrente média na fase de descida</div><div class="cwrap-lg"><canvas id="cTendDes"></canvas></div></div>
+      <div class="cc">
+        <div class="ctitle">Corrente Média — Subida (motor ativo ≥ 0.8 A)</div>
+        <div id="legTendSub" class="seg-legend"></div>
+        <div class="cwrap-lg"><canvas id="cTendSub"></canvas></div>
+      </div>
+      <div class="cc">
+        <div class="ctitle">Corrente Média — Descida</div>
+        <div id="legTendDes" class="seg-legend"></div>
+        <div class="cwrap-lg"><canvas id="cTendDes"></canvas></div>
+      </div>
     </div>
   </section>
   <section>
-    <div class="slabel"><span>pico de corrente por ciclo</span></div>
-    <div class="cc"><div class="ctitle">Corrente Máxima por Ciclo</div><div class="csub">Picos acima da linha tracejada (±2σ) são anomalias</div><div class="cwrap-lg"><canvas id="cPico"></canvas></div></div>
+    <div class="slabel"><span class="slabel-text">pico de corrente por ciclo</span></div>
+    <div class="cc">
+      <div class="ctitle">Corrente Máxima por Ciclo — Subida e Descida</div>
+      <div id="legPico" class="seg-legend"></div>
+      <div class="cwrap-lg"><canvas id="cPico"></canvas></div>
+    </div>
   </section>
 </div>
 
+<!-- ══ COMPARADOR ══ -->
 <div class="page" id="p-comparador">
   <section>
-    <div class="slabel"><span>comparador de ciclos</span></div>
-    <div class="cmp-grid">
-      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-blu">CICLO A</span></div><select id="cmpA" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
-      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-grn">CICLO B</span></div><select id="cmpB" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
-      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-amb">CICLO C</span></div><select id="cmpC" onchange="renderComparador()" style="width:100%;margin-top:6px"><option value="">— nenhum —</option></select></div>
+    <div class="slabel"><span class="slabel-text">comparador de ciclos</span></div>
+    <div class="cmp-selects">
+      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-blu">CICLO A</span></div>
+        <select id="cmpA" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
+      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-grn">CICLO B</span></div>
+        <select id="cmpB" onchange="renderComparador()" style="width:100%;margin-top:6px"></select></div>
+      <div class="cmp-slot"><div class="cmp-slot-title"><span class="badge badge-amb">CICLO C (opcional)</span></div>
+        <select id="cmpC" onchange="renderComparador()" style="width:100%;margin-top:6px"><option value="">— nenhum —</option></select></div>
     </div>
-    <div class="cc"><div class="ctitle">Perfil de Corrente — Subida</div><div class="csub">Comparação das 40 amostras entre os ciclos selecionados</div><div class="cwrap-lg"><canvas id="cCmpSub"></canvas></div></div>
+    <div class="cc" style="margin-bottom:14px">
+      <div class="ctitle">Ciclo Completo — Subida · Pausa · Descida (160 amostras)</div>
+      <div class="csub">Sobreposição do ciclo inteiro entre os ciclos selecionados</div>
+      <div class="cwrap-xl"><canvas id="cCmpCompleto"></canvas></div>
+    </div>
   </section>
   <section>
-    <div class="cc"><div class="ctitle">Perfil de Corrente — Descida</div><div class="csub">Comparação das 10 amostras de descida entre os ciclos selecionados</div><div class="cwrap-lg"><canvas id="cCmpDes"></canvas></div></div>
+    <div class="slabel"><span class="slabel-text">comparação por fase</span></div>
+    <div class="cgrid">
+      <div class="cc"><div class="ctitle">Subida (100 amostras)</div><div class="csub">Sobreposição da fase de subida</div><div class="cwrap-lg"><canvas id="cCmpSub"></canvas></div></div>
+      <div class="cc"><div class="ctitle">Pausa 5 min (50 amostras)</div><div class="csub">Sobreposição da fase de pausa no fim de curso</div><div class="cwrap-lg"><canvas id="cCmpPausa"></canvas></div></div>
+    </div>
+    <div class="cc" style="margin-top:14px"><div class="ctitle">Descida (10 amostras)</div><div class="csub">Sobreposição da fase de descida</div><div class="cwrap-lg"><canvas id="cCmpDes"></canvas></div></div>
   </section>
 </div>
 
+<!-- ══ TEMPO ══ -->
 <div class="page" id="p-tempo">
-  <section><div class="slabel"><span>duração por ciclo</span></div><div class="cc"><div class="ctitle">Duração por Ciclo — Subida e Descida (s)</div><div class="csub">Tempo real de cada ciclo (leitura atual − anterior) · picos filtrados automaticamente</div><div class="cwrap-lg"><canvas id="cTempoSD"></canvas></div></div></section>
-  <section><div class="slabel"><span>motor ativo por ciclo</span></div><div class="cc"><div class="ctitle">Tempo Motor Ativo por Ciclo (s)</div><div class="csub">Duração real de funcionamento por ciclo (subida + descida)</div><div class="cwrap-lg"><canvas id="cTempoAtivo"></canvas></div></div></section>
-  <section><div class="slabel"><span>tempo total acumulado</span></div><div class="info-total" id="infoTotal">—</div></section>
+  <section>
+    <div class="slabel"><span class="slabel-text">duração por ciclo</span></div>
+    <div class="cc">
+      <div class="ctitle">Duração por Ciclo — Subida e Descida (s)</div>
+      <div id="legTempoSD" class="seg-legend"></div>
+      <div class="cwrap-lg"><canvas id="cTempoSD"></canvas></div>
+    </div>
+  </section>
+  <section>
+    <div class="slabel"><span class="slabel-text">motor ativo por ciclo</span></div>
+    <div class="cc">
+      <div class="ctitle">Tempo Motor Ativo por Ciclo (s)</div>
+      <div id="legTempoAtivo" class="seg-legend"></div>
+      <div class="cwrap-lg"><canvas id="cTempoAtivo"></canvas></div>
+    </div>
+  </section>
+  <section>
+    <div class="slabel"><span class="slabel-text">tempo total acumulado</span></div>
+    <div class="info-total" id="infoTotal">—</div>
+  </section>
 </div>
 
-<footer id="ft">Olsen Eletrônica · motor_assento_bucha_10FV_90NY · auto-refresh 60s</footer>
+<footer id="ft">Olsen Eletrônica · analise_motor_com_pausa · auto-refresh 120s</footer>
 
 <script>
-const CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vTT_fV0-_DuNAf73kbS5keUJqj9aEkfrWLu0OPQNorC3bmLT_hpb5aAvWITR7E94CfoMeHOTuYJ4S6n/pub?output=csv';
-const I={DATA:0,HORA:1,CICLOS:2,T_SUB:3,SUB_START:4,T_DES:44,DES_START:45,T_ATIVO:55,T_TOTAL:56};
-let DATA=[],CH={},TM=null;
+const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQctcyUS2x20VvnLt9nTMAGBMqeUnrafI-mak_1jxVcBFHOPTF7XxY9v-O8ACAQ1tLDOXBODOLVxLY/pub?output=csv';
+const I = {
+  DATA:0,HORA:1,CICLOS:2,T_SUB:3,
+  SUB_START:4,M1_START:104,M2_START:114,M3_START:124,M4_START:134,M5_START:144,
+  DES_START:154,T_DES:164,T_ATIVO:165,T_TOTAL:166,
+  BUCHA:167,CARGA_ASSENTO:168,CARGA_ENCOSTO:169,MOLA:170
+};
+const LIMIAR_ATIVO = 0.8;
+let DATA=[], CH={}, TM=null;
 
-document.getElementById('logoImg').src='data:image/png;base64,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';
+// ── Paleta de buchas: cores distintas para cada sistema ──
+// Base: azul, laranja, verde, roxo, ciano, vermelho, rosa, marrom
+const BUCHA_PALETTE = [
+  { line:'#2563eb', fill:'#2563eb22', light:'#dbeafe', border:'#93c5fd', text:'#1d4ed8' },
+  { line:'#d97706', fill:'#d9770622', light:'#fef3c7', border:'#fcd34d', text:'#92400e' },
+  { line:'#16a34a', fill:'#16a34a22', light:'#dcfce7', border:'#86efac', text:'#15803d' },
+  { line:'#7c3aed', fill:'#7c3aed22', light:'#f3e8ff', border:'#d8b4fe', text:'#6d28d9' },
+  { line:'#0891b2', fill:'#0891b222', light:'#cffafe', border:'#67e8f9', text:'#0e7490' },
+  { line:'#dc2626', fill:'#dc262622', light:'#fee2e2', border:'#fca5a5', text:'#b91c1c' },
+];
 
+// ── PARSE ──
 function parseCSV(txt){
   const lines=txt.trim().split('\n');
   return lines.slice(1).filter(l=>l.trim()).map(line=>{
     const vals=[];let cur='',inQ=false;
     for(const ch of line){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){vals.push(cur.trim());cur='';}else cur+=ch;}
     vals.push(cur.trim());
-    return vals.map(v=>{const n=parseFloat(v.replace(/^"|"$/g,'').trim());return isNaN(n)?v.replace(/^"|"$/g,'').trim():n;});
+    return vals.map(v=>{const c=v.replace(/^"|"$/g,'').trim();const n=Number(c);return(c!==''&&!isNaN(n)&&String(n)===c)?n:c;});
   });
 }
-
-const g=(row,i)=>row[i]??null;
-const num=(row,i)=>{const v=g(row,i);return typeof v==='number'?v:null;};
+const g=(r,i)=>r[i]??null;
+const num=(r,i)=>{const v=g(r,i);return typeof v==='number'?v:null;};
+const str=(r,i)=>{const v=g(r,i);return v!==null&&v!==''?String(v):null;};
 const f=(v,d=2)=>typeof v==='number'&&!isNaN(v)?v.toFixed(d):'—';
 const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
 const fmtMin=v=>{if(typeof v!=='number'||isNaN(v))return'—';const m=v/60;if(m<60)return`${Math.round(m)} min`;const h=Math.floor(m/60),mn=Math.round(m%60);return mn>0?`${h}h ${mn}min`:`${h}h`;};
 const fmtHora=v=>{if(typeof v!=='number'||isNaN(v))return'—';if(v<60)return`${Math.round(v)} min`;const h=Math.floor(v/60),mn=Math.round(v%60);return mn>0?`${h}h ${mn}min`:`${h}h`;};
 
-function getSub(row){return Array.from({length:40},(_,i)=>num(row,I.SUB_START+i)).filter(v=>v!==null);}
+function getSub(row){return Array.from({length:100},(_,i)=>num(row,I.SUB_START+i)).filter(v=>v!==null);}
+function getSubAtivo(row){return getSub(row).filter(v=>v>=LIMIAR_ATIVO);}
 function getDes(row){return Array.from({length:10},(_,i)=>num(row,I.DES_START+i)).filter(v=>v!==null);}
+function getMin(row,m){const s=[I.M1_START,I.M2_START,I.M3_START,I.M4_START,I.M5_START][m-1];return Array.from({length:10},(_,i)=>num(row,s+i)).filter(v=>v!==null);}
+function getAllPausa(row){const o=[];for(let m=1;m<=5;m++)o.push(...getMin(row,m));return o;}
 
+// ── HISTÓRICO DE BUCHAS ──
+// Retorna [{ciclo, bucha, paletteIdx, startDataIdx, endDataIdx}]
+let BUCHA_HIST=[];
+function buildBuchaHist(){
+  BUCHA_HIST=[];
+  let last=null, paletteIdx=0;
+  DATA.forEach((row,idx)=>{
+    const b=str(row,I.BUCHA);
+    if(b&&b!==last){
+      if(BUCHA_HIST.length>0) BUCHA_HIST[BUCHA_HIST.length-1].endDataIdx=idx-1;
+      BUCHA_HIST.push({ciclo:num(row,I.CICLOS),bucha:b,paletteIdx:paletteIdx%BUCHA_PALETTE.length,startDataIdx:idx,endDataIdx:DATA.length-1});
+      paletteIdx++;last=b;
+    }
+  });
+}
+
+// Retorna a cor de palete para o índice de row em DATA
+function paletteForIdx(dataIdx){
+  for(const h of BUCHA_HIST){if(dataIdx>=h.startDataIdx&&dataIdx<=h.endDataIdx)return BUCHA_PALETTE[h.paletteIdx];}
+  return BUCHA_PALETTE[0];
+}
+
+// ── ENRICH ──
 function enrich(data){
   data.forEach(row=>{
-    const vs=getSub(row),vd=getDes(row);
-    row._mS=vs.length?avg(vs):null;row._mD=vd.length?avg(vd):null;
-    row._pS=vs.length?Math.max(...vs):null;row._pD=vd.length?Math.max(...vd):null;
+    const vs=getSub(row),vd=getDes(row),vsa=getSubAtivo(row);
+    row._mS=vsa.length?avg(vsa):null;
+    row._nAtivo=vsa.length;
+    row._mD=vd.length?avg(vd):null;
+    row._pS=vs.length?Math.max(...vs):null;
+    row._pD=vd.length?Math.max(...vd):null;
+    row._pausaAvg=[];row._pausaMax=[];row._pausaGlobal=null;
+    for(let m=1;m<=5;m++){const vm=getMin(row,m);row._pausaAvg.push(vm.length?avg(vm):null);row._pausaMax.push(vm.length?Math.max(...vm):null);}
+    const allP=getAllPausa(row).filter(v=>v!==null);
+    row._pausaGlobal=allP.length?Math.max(...allP):null;
   });
 }
 
@@ -213,167 +421,365 @@ function goTab(id,el){
   if(id==='tendencia')renderTendencia();
   if(id==='tempo')renderTempo();
   if(id==='comparador')renderComparador();
+  if(id==='pausa'){renderPausa();renderPausaTendencia();}
 }
 
-const CO=()=>({
-  responsive:true,maintainAspectRatio:false,animation:{duration:400},
-  plugins:{legend:{labels:{color:'#71706e',font:{family:'Arial',size:10},boxWidth:10,padding:10}}},
-  scales:{
-    x:{ticks:{color:'#bbb8b2',font:{family:'Arial',size:9},maxTicksLimit:16},grid:{color:'#e4e1db'},border:{display:false}},
-    y:{ticks:{color:'#bbb8b2',font:{family:'Arial',size:9}},grid:{color:'#e4e1db'},border:{display:false}}
-  }
-});
+// ── CORES BASE (para gráficos de perfil/comparador por ciclo) ──
+const CC={blu:'#2563eb',grn:'#16a34a',amb:'#d97706',pur:'#7c3aed',cya:'#0891b2',red:'#dc2626'};
+const minColors=[CC.blu,CC.grn,CC.amb,CC.pur,CC.cya];
+
+// ── CHART OPTIONS ──
+function CO(extra={}){
+  return{responsive:true,maintainAspectRatio:false,animation:{duration:400},
+    plugins:{legend:{labels:{color:'#4b5263',font:{family:'Inter',size:10},boxWidth:10,padding:12}},
+      tooltip:{backgroundColor:'#ffffff',borderColor:'#e2e5ea',borderWidth:1,titleColor:'#1a1d23',bodyColor:'#4b5263',
+        titleFont:{family:'Inter',size:11},bodyFont:{family:'Inter',size:10},padding:10,
+        callbacks:{label:ctx=>{const v=ctx.parsed.y;return v!==null?` ${ctx.dataset.label}: ${typeof v==='number'?v.toFixed(3)+' A':v}`:null;}}}},
+    scales:{x:{ticks:{color:'#8c93a3',font:{family:'Inter',size:9},maxTicksLimit:20},grid:{color:'#e2e5ea'},border:{display:false}},
+      y:{ticks:{color:'#8c93a3',font:{family:'Inter',size:9}},grid:{color:'#e2e5ea'},border:{display:false}}},...extra};
+}
+
+function COT(rowsRef,extra={}){
+  return{responsive:true,maintainAspectRatio:false,animation:{duration:400},
+    plugins:{legend:{labels:{color:'#4b5263',font:{family:'Inter',size:10},boxWidth:10,padding:12}},
+      tooltip:{backgroundColor:'#ffffff',borderColor:'#cdd1d9',borderWidth:1,titleColor:'#1a1d23',bodyColor:'#4b5263',footerColor:'#8c93a3',
+        titleFont:{family:'Inter',size:11,weight:'600'},bodyFont:{family:'Inter',size:10},footerFont:{family:'Inter',size:9},padding:12,boxPadding:4,
+        callbacks:{
+          title:items=>{const idx=items[0].dataIndex;const row=rowsRef[idx];return row?`Ciclo ${num(row,I.CICLOS)??items[0].label}`:`Ciclo ${items[0].label}`;},
+          label:ctx=>{const v=ctx.parsed.y;if(v===null||v===undefined)return null;return` ${ctx.dataset.label}: ${typeof v==='number'?v.toFixed(3)+' A':v}`;},
+          footer:items=>{const idx=items[0].dataIndex;const row=rowsRef[idx];if(!row)return[];const d=String(g(row,I.DATA)||'').trim(),h=String(g(row,I.HORA)||'').trim();const lines=[];if(d)lines.push('Data: '+d);if(h)lines.push('Hora: '+h);const b=str(row,I.BUCHA);if(b)lines.push('Bucha: '+b.split(':')[0]);return lines;}
+        }}},
+    scales:{x:{ticks:{color:'#8c93a3',font:{family:'Inter',size:9},maxTicksLimit:20},grid:{color:'#e2e5ea'},border:{display:false}},
+      y:{ticks:{color:'#8c93a3',font:{family:'Inter',size:9}},grid:{color:'#e2e5ea'},border:{display:false}}},...extra};
+}
+
 function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 
+// ────────────────────────────────────────────────────────────
+// SEGMENTED DATASETS — gera múltiplos datasets, um por bucha,
+// com a cor correspondente, para gráficos de série temporal.
+// rowsRef: array de rows (subconjunto de DATA)
+// dataFn(row) → valor ou null
+// labelBase: string base do label (ex: "Média Subindo")
+// Retorna {datasets, legend:[{color,label}]}
+// ────────────────────────────────────────────────────────────
+function segmentedDatasets(rowsRef, dataFn, labelBase, extraDs={}){
+  if(!BUCHA_HIST.length){
+    // sem histórico de bucha → um único dataset azul
+    return{
+      datasets:[{label:labelBase,data:rowsRef.map(r=>dataFn(r)),borderColor:BUCHA_PALETTE[0].line,backgroundColor:BUCHA_PALETTE[0].fill,tension:.3,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:BUCHA_PALETTE[0].line,borderWidth:1.8,fill:true,spanGaps:false,...extraDs}],
+      legend:[{color:BUCHA_PALETTE[0].line,label:labelBase}]
+    };
+  }
+
+  const datasets=[], legend=[];
+  BUCHA_HIST.forEach(hist=>{
+    const pal=BUCHA_PALETTE[hist.paletteIdx];
+    const shortName=hist.bucha.split(':')[0];
+    const lbl=`${labelBase} — ${shortName} (cx ${hist.ciclo}→)`;
+    // Para cada ponto: valor se pertence a este segmento, null caso contrário
+    const data=rowsRef.map((row,i)=>{
+      const dataIdx=DATA.indexOf(row);
+      return(dataIdx>=hist.startDataIdx&&dataIdx<=hist.endDataIdx)?dataFn(row):null;
+    });
+    datasets.push({label:lbl,data,borderColor:pal.line,backgroundColor:pal.fill,tension:.3,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:pal.line,borderWidth:1.8,fill:true,spanGaps:false,...extraDs});
+    legend.push({color:pal.line,label:`${shortName} (Ciclo ${hist.ciclo}→)`});
+  });
+  return{datasets,legend};
+}
+
+// Renderiza legenda de buchas num container
+function renderSegLegend(containerId, legend){
+  const el=document.getElementById(containerId);if(!el)return;
+  if(!legend||legend.length<=1){el.innerHTML='';return;}
+  el.innerHTML=legend.map(l=>`<div class="seg-legend-item"><div class="seg-legend-dot" style="background:${l.color}"></div>${l.label}</div>`).join('');
+}
+
+// Linha de tendência (regressão linear)
+function linReg(ys){
+  const clean=ys.map((v,i)=>({v,i})).filter(({v})=>v!==null);if(!clean.length)return ys.map(()=>null);
+  const mx=avg(clean.map(({i})=>i)),my=avg(clean.map(({v})=>v));
+  const b=clean.reduce((s,{v,i})=>s+(i-mx)*(v-my),0)/(clean.reduce((s,{i})=>s+(i-mx)**2,0)||1);
+  return ys.map((_,i)=>+(my+b*(i-mx)).toFixed(4));
+}
+
+function populateSelects(){
+  const opts=DATA.map((row,i)=>`<option value="${i}">${num(row,I.CICLOS)??i+1}</option>`).join('');
+  ['selCiclo','selPausa'].forEach(id=>{document.getElementById(id).innerHTML=opts;document.getElementById(id).value=DATA.length-1;});
+  const optsC=DATA.map((row,i)=>`<option value="${i}">Ciclo ${num(row,I.CICLOS)??i+1}</option>`).join('');
+  ['cmpA','cmpB'].forEach(id=>{document.getElementById(id).innerHTML=optsC;});
+  document.getElementById('cmpA').value=0;document.getElementById('cmpB').value=DATA.length-1;
+  document.getElementById('cmpC').innerHTML='<option value="">— nenhum —</option>'+optsC;
+}
+
+// ════════════════════════════════
+// RESUMO
+// ════════════════════════════════
 function renderResumo(){
   if(!DATA.length)return;
   const last=DATA[DATA.length-1];
   const n=DATA.filter(r=>r._mS!==null).length;
   document.getElementById('kpiGrid').innerHTML=`
-    <div class="kpi"><div class="kpi-lbl">Quantidade de Ciclos</div><div class="kpi-val">${num(last,I.CICLOS)??'—'}<span class="kpi-unit">cx</span></div><div class="kpi-sub">${n} leituras registradas</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Total Subindo</div><div class="kpi-val">${fmtMin(num(last,I.T_SUB))}</div><div class="kpi-sub">acumulado até este ciclo</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Total Descendo</div><div class="kpi-val">${fmtMin(num(last,I.T_DES))}</div><div class="kpi-sub">acumulado até este ciclo</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Motor Ativo</div><div class="kpi-val">${fmtMin(num(last,I.T_ATIVO))}</div><div class="kpi-sub">acumulado até este ciclo</div></div>
-    <div class="kpi"><div class="kpi-lbl">Tempo Total de Teste</div><div class="kpi-val">${fmtHora(num(last,I.T_TOTAL))}</div><div class="kpi-sub">inclui descanso do motor</div></div>`;
+    <div class="kpi"><div class="kpi-lbl">Ciclos Realizados</div><div class="kpi-val">${num(last,I.CICLOS)??'—'}<span class="kpi-unit">cx</span></div><div class="kpi-sub">${n} leituras registradas</div></div>
+    <div class="kpi"><div class="kpi-lbl">T. Total Subindo</div><div class="kpi-val">${fmtMin(num(last,I.T_SUB))}</div><div class="kpi-sub">acumulado</div></div>
+    <div class="kpi"><div class="kpi-lbl">T. Total Descendo</div><div class="kpi-val">${fmtMin(num(last,I.T_DES))}</div><div class="kpi-sub">acumulado</div></div>
+    <div class="kpi"><div class="kpi-lbl">Motor Ativo</div><div class="kpi-val">${fmtMin(num(last,I.T_ATIVO))}</div><div class="kpi-sub">sem pausa</div></div>
+    <div class="kpi"><div class="kpi-lbl">Tempo Total Teste</div><div class="kpi-val">${fmtHora(num(last,I.T_TOTAL))}</div><div class="kpi-sub">inclui pausa + descanso</div></div>`;
 
-  const thead='<tr><th>Ciclos</th><th>Data</th><th>Hora</th><th>T.Sub (min)</th><th>T.Des (min)</th><th>T.Ativo (min)</th><th>T.Total (h)</th></tr>';
+  // Configuração do ensaio (params fixos da primeira row que tem dados)
+  const setupRow=DATA.slice().reverse().find(r=>str(r,I.CARGA_ASSENTO))||last;
+  document.getElementById('ensaioParams').innerHTML=`
+    <div><div class="setup-item-lbl">Carga Assento</div><div class="setup-item-val">${str(setupRow,I.CARGA_ASSENTO)||'—'}</div></div>
+    <div class="setup-divider"></div>
+    <div><div class="setup-item-lbl">Carga Encosto</div><div class="setup-item-val">${str(setupRow,I.CARGA_ENCOSTO)||'—'}</div></div>
+    <div class="setup-divider"></div>
+    <div><div class="setup-item-lbl">Mola a Gás</div><div class="setup-item-val">${str(setupRow,I.MOLA)||'—'}</div></div>`;
+
+  // Histórico de buchas unificado
+  const histWrap=document.getElementById('buchaHistWrap');
+  const histList=document.getElementById('buchaHistList');
+  if(BUCHA_HIST.length>0){
+    histWrap.style.display='block';
+    histList.innerHTML=BUCHA_HIST.map((h,i)=>{
+      const pal=BUCHA_PALETTE[h.paletteIdx];
+      const cicloFim=i<BUCHA_HIST.length-1?`até cx ${BUCHA_HIST[i+1].ciclo-1}`:'atual';
+      return`<div class="bucha-chip" style="background:${pal.light};border-color:${pal.border};color:${pal.text}">
+        <span class="bucha-chip-ciclo">Ciclo ${h.ciclo}</span>
+        <span class="bucha-chip-name">${h.bucha}</span>
+        <span style="opacity:.6;font-size:9px">(${cicloFim})</span>
+      </div>`;
+    }).join('');
+  }else{
+    histWrap.style.display='none';
+  }
+
+  const thead='<tr><th>Ciclos</th><th>Data</th><th>Hora</th><th>Média ↑(A)★</th><th>N Ativas</th><th>Pico ↑(A)</th><th>Pausa Max(A)</th><th>Média ↓(A)</th><th>T.Sub</th><th>T.Des</th><th>T.Ativo</th><th>T.Total</th></tr>';
   const tbody=DATA.slice(-15).reverse().map(row=>`
     <tr>
       <td class="hi">${num(row,I.CICLOS)??'—'}</td>
       <td>${g(row,I.DATA)||'—'}</td><td>${g(row,I.HORA)||'—'}</td>
+      <td class="acc">${f(row._mS,3)}</td>
+      <td style="color:var(--txt3)">${row._nAtivo??'—'}/100</td>
+      <td>${f(row._pS,3)}</td>
+      <td class="${row._pausaGlobal!==null&&row._pausaGlobal>0.05?'amb':'grn'}">${f(row._pausaGlobal,3)}</td>
+      <td>${f(row._mD,3)}</td>
       <td>${fmtMin(num(row,I.T_SUB))}</td><td>${fmtMin(num(row,I.T_DES))}</td>
       <td>${fmtMin(num(row,I.T_ATIVO))}</td><td>${fmtHora(num(row,I.T_TOTAL))}</td>
     </tr>`).join('');
-  document.getElementById('tableBox').innerHTML=`<table><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
+  document.getElementById('tableBox').innerHTML=`
+    <table><thead>${thead}</thead><tbody>${tbody}</tbody></table>
+    <div style="padding:8px 12px;font-family:var(--mono);font-size:9px;color:var(--txt3);border-top:1px solid var(--brd)">
+      ★ Média de subida calculada apenas com amostras ≥ ${LIMIAR_ATIVO} A (motor ativo) · N Ativas = amostras usadas no cálculo
+    </div>`;
 }
 
-function populateSelects(){
-  const opts=DATA.map((row,i)=>`<option value="${i}">${num(row,I.CICLOS)??i+1}</option>`).join('');
-  document.getElementById('selCiclo').innerHTML=opts;
-  document.getElementById('selCiclo').value=DATA.length-1;
-  const optsC=DATA.map((row,i)=>`<option value="${i}">Ciclo ${num(row,I.CICLOS)??i+1}</option>`).join('');
-  document.getElementById('cmpA').innerHTML=optsC;
-  document.getElementById('cmpB').innerHTML=optsC;
-  document.getElementById('cmpB').value=DATA.length-1;
-  document.getElementById('cmpC').innerHTML='<option value="">— nenhum —</option>'+optsC;
-  document.getElementById('cmpA').value=0;
-}
-
+// ════════════════════════════════
+// PERFIL (ciclo individual — sem segmentação por bucha)
+// ════════════════════════════════
 function renderPerfil(){
   const idx=parseInt(document.getElementById('selCiclo').value);
   const row=DATA[idx];if(!row)return;
-  const vS=getSub(row),vD=getDes(row);
-  const lblS=vS.map((_,i)=>`S${i+1}`),lblD=vD.map((_,i)=>`D${i+1}`);
-  const labels=[...lblS,...lblD];
-  const dS=[...vS,...new Array(vD.length).fill(null)];
-  const dD=[...new Array(vS.length).fill(null),...vD];
-  const mS=avg(vS),pS=Math.max(...vS),mD=avg(vD),pD=Math.max(...vD);
-  document.getElementById('perfilTitle').textContent=`Ciclo ${num(row,I.CICLOS)??idx+1}`;
+  const vS=getSub(row),vSA=getSubAtivo(row),vM=[1,2,3,4,5].map(m=>getMin(row,m)),vD=getDes(row);
+  const nS=vS.length,nM=vM.reduce((s,a)=>s+a.length,0),nD=vD.length,total=nS+nM+nD;
+  const labels=[...vS.map((_,i)=>`S${i+1}`),...[1,2,3,4,5].flatMap(m=>vM[m-1].map((_,i)=>`M${m}.${i+1}`)),...vD.map((_,i)=>`D${i+1}`)];
+  const sparse=(vals,start)=>{const a=new Array(total).fill(null);vals.forEach((v,i)=>{a[start+i]=v;});return a;};
+  const startS=0,startM=[0,1,2,3,4].map(m=>nS+vM.slice(0,m).reduce((s,a)=>s+a.length,0)),startD=nS+nM;
+  const mS=vSA.length?avg(vSA):null,mD=vD.length?avg(vD):null,mP=vM.flat().length?avg(vM.flat()):null;
+  const pS=vS.length?Math.max(...vS):null,pD=vD.length?Math.max(...vD):null,pP=vM.flat().length?Math.max(...vM.flat()):null;
+  const cx=num(row,I.CICLOS)??idx+1;
+  document.getElementById('perfilTitle').textContent=`Ciclo ${cx}  ·  ${g(row,I.DATA)||''}  ${g(row,I.HORA)||''}  ·  ${vSA.length}/100 amostras ativas`;
+  const pal=paletteForIdx(idx);
+  const datasets=[
+    {label:'↑ Subindo (A)',data:sparse(vS,startS),borderColor:pal.line,backgroundColor:pal.fill,tension:.3,pointRadius:2,pointHoverRadius:5,borderWidth:1.8,fill:true,spanGaps:false},
+    ...[0,1,2,3,4].map(m=>({label:`⏸ MIN${m+1} (A)`,data:vM[m].length?sparse(vM[m],startM[m]):new Array(total).fill(null),borderColor:minColors[m],backgroundColor:minColors[m]+'18',tension:.3,pointRadius:3,pointHoverRadius:6,borderWidth:1.5,fill:false,spanGaps:false})),
+    {label:'↓ Descendo (A)',data:sparse(vD,startD),borderColor:CC.grn,backgroundColor:CC.grn+'18',tension:.3,pointRadius:3,pointHoverRadius:6,borderWidth:1.8,fill:true,spanGaps:false},
+    ...(mS!==null?[{label:`Média ↑ ativa ${f(mS,3)}A (${vSA.length}/100)`,data:(()=>{const a=new Array(total).fill(null);vS.forEach((_,i)=>{a[startS+i]=mS;});return a;})(),borderColor:pal.line+'88',borderDash:[4,4],pointRadius:0,borderWidth:1.5,spanGaps:false,fill:false}]:[]),
+    ...(mP!==null?[{label:`Média ⏸ ${f(mP,3)}A`,data:(()=>{const a=new Array(total).fill(null);[0,1,2,3,4].forEach(m=>{vM[m].forEach((_,i)=>{a[startM[m]+i]=mP;});});return a;})(),borderColor:CC.amb+'66',borderDash:[4,4],pointRadius:0,borderWidth:1,spanGaps:false,fill:false}]:[]),
+    ...(mD!==null?[{label:`Média ↓ ${f(mD,3)}A`,data:(()=>{const a=new Array(total).fill(null);vD.forEach((_,i)=>{a[startD+i]=mD;});return a;})(),borderColor:CC.grn+'66',borderDash:[4,4],pointRadius:0,borderWidth:1,spanGaps:false,fill:false}]:[]),
+  ];
   dc('cPerfil');
-  CH.cPerfil=new Chart(document.getElementById('cPerfil'),{type:'line',data:{labels,datasets:[
-    {label:'Subindo (A)',data:dS,borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.4,pointRadius:3,pointHoverRadius:5,borderWidth:1.5,fill:true,spanGaps:false},
-    {label:'Descendo (A)',data:dD,borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.4,pointRadius:4,pointHoverRadius:6,borderWidth:1.5,fill:true,spanGaps:false},
-    {label:`Média Sub ${f(mS,3)}A`,data:labels.map((_,i)=>i<vS.length?mS:null),borderColor:'#2563eb55',borderDash:[4,4],pointRadius:0,borderWidth:1,spanGaps:false},
-    {label:`Média Des ${f(mD,3)}A`,data:labels.map((_,i)=>i>=vS.length?mD:null),borderColor:'#16a34a55',borderDash:[4,4],pointRadius:0,borderWidth:1,spanGaps:false},
-  ]},options:CO()});
+  CH.cPerfil=new Chart(document.getElementById('cPerfil'),{type:'line',data:{labels,datasets},options:{...CO(),plugins:{...CO().plugins,tooltip:{...CO().plugins.tooltip,callbacks:{title:items=>{const lbl=items[0].label;if(lbl.startsWith('S'))return`Subida — ${lbl}`;if(lbl.startsWith('M'))return`Pausa — ${lbl.replace('.',' Am.')}`;if(lbl.startsWith('D'))return`Descida — ${lbl}`;return lbl;},label:ctx=>{const v=ctx.parsed.y;if(v===null)return null;const act=ctx.dataset.label?.startsWith('↑')&&v!==null?(v>=LIMIAR_ATIVO?' ✓':' —'):'';return` ${ctx.dataset.label}: ${typeof v==='number'?v.toFixed(3)+' A':v}${act}`;},footer:()=>{const lines=[];const d=String(g(row,I.DATA)||'').trim(),h=String(g(row,I.HORA)||'').trim();if(d)lines.push('Data: '+d);if(h)lines.push('Hora: '+h);lines.push(`Amostras ativas: ${vSA.length}/100 (≥${LIMIAR_ATIVO}A)`);return lines;}}}},scales:{x:{ticks:{color:ctx=>{const lbl=labels[ctx.index]??'';if(lbl.startsWith('M'))return CC.amb;if(lbl.startsWith('D'))return CC.grn;return'#8c93a3';},font:{family:'Inter',size:8},maxTicksLimit:32,maxRotation:0},grid:{color:ctx=>{const lbl=labels[ctx.index]??'';return(lbl==='M1.1'||lbl==='D1')?'#cdd1d9':'#e2e5ea';},lineWidth:ctx=>{const lbl=labels[ctx.index]??'';return(lbl==='M1.1'||lbl==='D1')?2:1;}},border:{display:false}},y:{ticks:{color:'#8c93a3',font:{family:'Inter',size:9}},grid:{color:'#e2e5ea'},border:{display:false}}}}});
   const dtS=idx>0?num(row,I.T_SUB)-num(DATA[idx-1],I.T_SUB):num(row,I.T_SUB);
   const dtD=idx>0?num(row,I.T_DES)-num(DATA[idx-1],I.T_DES):num(row,I.T_DES);
   document.getElementById('perfilStats').innerHTML=`
-    <div class="kpi"><div class="kpi-lbl">Média Subindo</div><div class="kpi-val">${f(mS,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">40 amostras</div></div>
+    <div class="kpi"><div class="kpi-lbl">Média Subindo★</div><div class="kpi-val">${f(mS,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">${vSA.length}/100 amostras ativas</div></div>
     <div class="kpi"><div class="kpi-lbl">Pico Subindo</div><div class="kpi-val">${f(pS,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">valor máximo</div></div>
+    <div class="kpi"><div class="kpi-lbl">Média Pausa</div><div class="kpi-val">${f(mP,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">50 amostras · 5 min</div></div>
+    <div class="kpi"><div class="kpi-lbl">Pico Pausa</div><div class="kpi-val">${f(pP,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">maior leitura</div></div>
     <div class="kpi"><div class="kpi-lbl">Média Descendo</div><div class="kpi-val">${f(mD,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">10 amostras</div></div>
     <div class="kpi"><div class="kpi-lbl">Pico Descendo</div><div class="kpi-val">${f(pD,3)}<span class="kpi-unit">A</span></div><div class="kpi-sub">valor máximo</div></div>
     <div class="kpi"><div class="kpi-lbl">Duração Subindo</div><div class="kpi-val">${f(dtS,2)}<span class="kpi-unit">s</span></div><div class="kpi-sub">neste ciclo</div></div>
     <div class="kpi"><div class="kpi-lbl">Duração Descendo</div><div class="kpi-val">${f(dtD,2)}<span class="kpi-unit">s</span></div><div class="kpi-sub">neste ciclo</div></div>`;
 }
 
-function linReg(ys){
-  const n=ys.length;if(!n)return[];
-  const xs=Array.from({length:n},(_,i)=>i),mx=avg(xs),my=avg(ys);
-  const b=xs.reduce((s,x,i)=>s+(x-mx)*(ys[i]-my),0)/xs.reduce((s,x)=>s+(x-mx)**2,0)||0;
-  return xs.map(x=>+(my+b*(x-mx)).toFixed(4));
+// ════════════════════════════════
+// PAUSA 5 MIN
+// ════════════════════════════════
+function renderPausa(){
+  const idx=parseInt(document.getElementById('selPausa').value);
+  const row=DATA[idx];if(!row)return;
+  document.getElementById('pausaTitle').textContent=`Ciclo ${num(row,I.CICLOS)??idx+1} — Pausa Fim de Curso`;
+  const labels=[],datasets=[];
+  const minNames=['MIN 1','MIN 2','MIN 3','MIN 4','MIN 5'];
+  for(let m=1;m<=5;m++)for(let s=1;s<=10;s++)labels.push(`M${m}.${s}`);
+  for(let m=1;m<=5;m++){
+    const vm=getMin(row,m),base=(m-1)*10,arr=new Array(50).fill(null);
+    vm.forEach((v,i)=>{arr[base+i]=v;});
+    datasets.push({label:minNames[m-1],data:arr,borderColor:minColors[m-1],backgroundColor:minColors[m-1]+'20',tension:.3,pointRadius:3,borderWidth:1.8,fill:false,spanGaps:false});
+    if(vm.length){const av=avg(vm);const aArr=new Array(50).fill(null);vm.forEach((_,i)=>{aArr[base+i]=av;});datasets.push({label:`Média M${m}: ${f(av,3)}A`,data:aArr,borderColor:minColors[m-1]+'55',borderDash:[4,4],pointRadius:0,borderWidth:1,fill:false,spanGaps:false});}
+  }
+  dc('cPausa');CH.cPausa=new Chart(document.getElementById('cPausa'),{type:'line',data:{labels,datasets},options:CO()});
+  const minLabels=['MIN 1','MIN 2','MIN 3','MIN 4','MIN 5'],mClasses=['min1','min2','min3','min4','min5'];
+  document.getElementById('pausaStats').innerHTML=minLabels.map((mn,i)=>{
+    const vm=getMin(row,i+1),a=vm.length?avg(vm):null,p=vm.length?Math.max(...vm):null,mn2=vm.length?Math.min(...vm):null;
+    return`<div class="pausa-slot"><div class="pausa-slot-title ${mClasses[i]}">${mn}</div><div class="kpi-lbl" style="margin-top:8px">Média</div><div style="font-family:var(--mono);font-size:18px;font-weight:600;color:var(--txt)">${f(a,3)} <span style="font-size:10px;color:var(--txt3)">A</span></div><div class="kpi-lbl" style="margin-top:6px">Pico / Mín</div><div style="font-family:var(--mono);font-size:11px;color:var(--txt2)">${f(p,3)} / ${f(mn2,3)} A</div><div class="kpi-sub" style="margin-top:4px">${vm.length} amostras</div></div>`;
+  }).join('');
 }
 
+// ════════════════════════════════
+// PAUSA TENDÊNCIA — segmentada por bucha
+// ════════════════════════════════
+function renderPausaTendencia(){
+  const valid=DATA.filter(r=>r._pausaAvg.some(v=>v!==null));if(!valid.length)return;
+  const lb=valid.map(r=>num(r,I.CICLOS)??'');
+  const minNames=['MIN 1','MIN 2','MIN 3','MIN 4','MIN 5'];
+
+  // Gráfico 1: média por minuto — usa minColors originais (5 linhas de minuto)
+  // sem segmentação por bucha para não sobrecarregar visualmente
+  dc('cPausaTend');
+  CH.cPausaTend=new Chart(document.getElementById('cPausaTend'),{type:'line',data:{labels:lb,datasets:minNames.map((mn,i)=>({label:mn,data:valid.map(r=>r._pausaAvg[i]),borderColor:minColors[i],backgroundColor:minColors[i]+'15',tension:.3,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:minColors[i],borderWidth:1.5,fill:false,spanGaps:true}))},options:COT(valid)});
+  renderSegLegend('legPausaTend',[]);
+
+  // Gráfico 2: pico de pausa — segmentado por bucha
+  const {datasets:picoDsets,legend:picoLeg}=segmentedDatasets(valid,r=>r._pausaGlobal,'Pico Pausa',{fill:true});
+  dc('cPausaPico');CH.cPausaPico=new Chart(document.getElementById('cPausaPico'),{type:'line',data:{labels:lb,datasets:picoDsets},options:COT(valid)});
+  renderSegLegend('legPausaPico',picoLeg);
+
+  // Gráfico 3: tendência por minuto
+  dc('cPausaMinutos');
+  const trendData=[];for(let m=0;m<5;m++)trendData.push(linReg(valid.map(r=>r._pausaAvg[m])));
+  CH.cPausaMinutos=new Chart(document.getElementById('cPausaMinutos'),{type:'line',data:{labels:lb,datasets:[
+    ...minNames.map((mn,i)=>({label:mn,data:valid.map(r=>r._pausaAvg[i]),borderColor:minColors[i],tension:.3,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:minColors[i],borderWidth:1.5,fill:false})),
+    ...minNames.map((mn,i)=>({label:`Tend ${mn}`,data:trendData[i],borderColor:minColors[i]+'55',borderDash:[5,4],pointRadius:0,pointHoverRadius:0,borderWidth:1,fill:false}))
+  ]},options:COT(valid)});
+}
+
+// ════════════════════════════════
+// TENDÊNCIA — segmentada por bucha
+// ════════════════════════════════
 function renderTendencia(){
   const val=DATA.filter(r=>r._mS!==null);if(!val.length)return;
   const lb=val.map(r=>num(r,I.CICLOS)??'');
-  const aS=val.map(r=>r._mS),mS=avg(aS),dS=Math.sqrt(avg(aS.map(v=>(v-mS)**2))),lS=mS+2*dS;
-  dc('cTendSub');
-  CH.cTendSub=new Chart(document.getElementById('cTendSub'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Média Subindo (A)',data:aS,borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true},
-    {label:'Tendência',data:linReg(aS),borderColor:'#dc2626',borderDash:[5,4],pointRadius:0,borderWidth:1.5,fill:false},
-  ]},options:CO()});
+
+  // Subida — segmentada
+  const {datasets:subDs,legend:subLeg}=segmentedDatasets(val,r=>r._mS,'Média Subindo ativa');
+  // Linha de tendência global
+  const aS=val.map(r=>r._mS);
+  subDs.push({label:'Tendência geral',data:linReg(aS),borderColor:'#64748b',borderDash:[5,4],pointRadius:0,pointHoverRadius:0,borderWidth:1.5,fill:false,tension:.3});
+  dc('cTendSub');CH.cTendSub=new Chart(document.getElementById('cTendSub'),{type:'line',data:{labels:lb,datasets:subDs},options:COT(val)});
+  renderSegLegend('legTendSub',subLeg);
+
+  // Descida — segmentada
+  const {datasets:desDs,legend:desLeg}=segmentedDatasets(val,r=>r._mD,'Média Descendo');
   const aD=val.map(r=>r._mD);
-  dc('cTendDes');
-  CH.cTendDes=new Chart(document.getElementById('cTendDes'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Média Descendo (A)',data:aD,borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:true},
-    {label:'Tendência',data:linReg(aD),borderColor:'#dc2626',borderDash:[5,4],pointRadius:0,borderWidth:1.5,fill:false},
-  ]},options:CO()});
-  dc('cPico');
-  CH.cPico=new Chart(document.getElementById('cPico'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Pico ↑ (A)',data:val.map(r=>r._pS),borderColor:'#2563eb',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:false},
-    {label:'Pico ↓ (A)',data:val.map(r=>r._pD),borderColor:'#16a34a',tension:.3,pointRadius:1.5,borderWidth:1.5,fill:false},
-    {label:`Threshold (${f(lS,3)}A)`,data:val.map(()=>lS),borderColor:'#dc262650',borderDash:[4,4],pointRadius:0,borderWidth:1},
-  ]},options:CO()});
+  desDs.push({label:'Tendência geral',data:linReg(aD),borderColor:'#64748b',borderDash:[5,4],pointRadius:0,pointHoverRadius:0,borderWidth:1.5,fill:false,tension:.3});
+  dc('cTendDes');CH.cTendDes=new Chart(document.getElementById('cTendDes'),{type:'line',data:{labels:lb,datasets:desDs},options:COT(val)});
+  renderSegLegend('legTendDes',desLeg);
+
+  // Pico — dois datasets (↑ e ↓) cada um segmentado por bucha
+  const picoDs=[];
+  BUCHA_HIST.forEach(hist=>{
+    const pal=BUCHA_PALETTE[hist.paletteIdx];
+    const short=hist.bucha.split(':')[0];
+    picoDs.push({label:`Pico ↑ ${short}`,data:val.map((r,i)=>{const di=DATA.indexOf(r);return(di>=hist.startDataIdx&&di<=hist.endDataIdx)?r._pS:null;}),borderColor:pal.line,tension:.3,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:pal.line,borderWidth:1.5,fill:false,spanGaps:false});
+    picoDs.push({label:`Pico ↓ ${short}`,data:val.map((r,i)=>{const di=DATA.indexOf(r);return(di>=hist.startDataIdx&&di<=hist.endDataIdx)?r._pD:null;}),borderColor:pal.line,borderDash:[3,3],tension:.3,pointRadius:2,pointHoverRadius:5,pointBackgroundColor:pal.line,borderWidth:1.2,fill:false,spanGaps:false});
+  });
+  if(!picoDs.length){
+    picoDs.push({label:'Pico ↑ (A)',data:val.map(r=>r._pS),borderColor:BUCHA_PALETTE[0].line,tension:.3,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:BUCHA_PALETTE[0].line,borderWidth:1.5,fill:false});
+    picoDs.push({label:'Pico ↓ (A)',data:val.map(r=>r._pD),borderColor:BUCHA_PALETTE[0].line,borderDash:[3,3],tension:.3,pointRadius:2,pointHoverRadius:5,pointBackgroundColor:BUCHA_PALETTE[0].line,borderWidth:1.2,fill:false});
+  }
+  dc('cPico');CH.cPico=new Chart(document.getElementById('cPico'),{type:'line',data:{labels:lb,datasets:picoDs},options:COT(val)});
+  renderSegLegend('legPico',BUCHA_HIST.map(h=>({color:BUCHA_PALETTE[h.paletteIdx].line,label:`${h.bucha.split(':')[0]} (Ciclo ${h.ciclo}→) — sólido=↑ tracejado=↓`})));
 }
 
+// ════════════════════════════════
+// COMPARADOR (sem segmentação — ciclos individuais)
+// ════════════════════════════════
 function renderComparador(){
   const ia=parseInt(document.getElementById('cmpA').value);
   const ib=parseInt(document.getElementById('cmpB').value);
   const icStr=document.getElementById('cmpC').value;
   const ic=icStr!==''?parseInt(icStr):null;
-  const rows=[DATA[ia],DATA[ib],...(ic!==null&&DATA[ic]?[DATA[ic]]:[])].filter(Boolean);
-  if(rows.length<2)return;
+  const indices=[ia,ib,...(ic!==null&&DATA[ic]?[ic]:[])];
+  const rows=indices.map(i=>DATA[i]).filter(Boolean);if(rows.length<2)return;
+  // Cor de cada ciclo baseada na sua bucha
+  // Cores fixas por posição (A=azul, B=verde, C=laranja) — independente da bucha
   const CL=['#2563eb','#16a34a','#d97706'];
-  const lblS=Array.from({length:40},(_,i)=>`S${i+1}`);
+  const lblS=Array.from({length:100},(_,i)=>`S${i+1}`);
+  const lblP=[];for(let m=1;m<=5;m++)for(let s=1;s<=10;s++)lblP.push(`M${m}.${s}`);
   const lblD=Array.from({length:10},(_,i)=>`D${i+1}`);
-  const mk=(row,fn,color,label)=>({label,data:fn(row),borderColor:color,backgroundColor:color+'18',tension:.4,pointRadius:3,borderWidth:1.5,fill:false});
-  dc('cCmpSub');
-  CH.cCmpSub=new Chart(document.getElementById('cCmpSub'),{type:'line',data:{labels:lblS,
-    datasets:rows.map((r,i)=>mk(r,getSub,CL[i],`Ciclo ${num(r,I.CICLOS)??i+1} ↑`))},options:CO()});
-  dc('cCmpDes');
-  CH.cCmpDes=new Chart(document.getElementById('cCmpDes'),{type:'line',data:{labels:lblD,
-    datasets:rows.map((r,i)=>mk(r,getDes,CL[i],`Ciclo ${num(r,I.CICLOS)??i+1} ↓`))},options:CO()});
+  const lblFull=[...lblS,...lblP,...lblD];
+  const mk=(data,color,label)=>({label,data,borderColor:color,backgroundColor:color+'22',tension:.3,pointRadius:2,pointHoverRadius:5,pointBackgroundColor:color,borderWidth:1.8,fill:false});
+  function mkTT(rowsArr){return{backgroundColor:'#ffffff',borderColor:'#cdd1d9',borderWidth:1,titleColor:'#1a1d23',bodyColor:'#4b5263',footerColor:'#8c93a3',titleFont:{family:'Inter',size:11,weight:'600'},bodyFont:{family:'Inter',size:10},footerFont:{family:'Inter',size:9},padding:12,boxPadding:4,callbacks:{title:items=>{const lbl=items[0].label;if(lbl.startsWith('S'))return`Subida — ${lbl}`;if(lbl.startsWith('M'))return`Pausa — ${lbl.replace('.',' Am.')}`;if(lbl.startsWith('D'))return`Descida — ${lbl}`;return lbl;},label:ctx=>{const v=ctx.parsed.y;return v!==null?` ${ctx.dataset.label}: ${typeof v==='number'?v.toFixed(3)+' A':v}`:null;},footer:items=>{const seen=new Set(),lines=[];items.forEach(item=>{const row=rowsArr[item.datasetIndex];if(!row)return;const key=num(row,I.CICLOS)??item.datasetIndex;if(seen.has(key))return;seen.add(key);const d=String(g(row,I.DATA)||'').trim(),h=String(g(row,I.HORA)||'').trim();const b=str(row,I.BUCHA);lines.push(`Ciclo ${key}: ${d} ${h}${b?' — '+b.split(':')[0]:''}`.trim());});return lines;}}};}
+  dc('cCmpCompleto');
+  CH.cCmpCompleto=new Chart(document.getElementById('cCmpCompleto'),{type:'line',data:{labels:lblFull,datasets:rows.map((r,i)=>mk([...getSub(r),...getAllPausa(r),...getDes(r)],CL[i],`Ciclo ${num(r,I.CICLOS)??indices[i]+1}`))},options:{...CO(),plugins:{...CO().plugins,tooltip:mkTT(rows)},scales:{x:{ticks:{color:ctx=>{const lbl=lblFull[ctx.index]??'';if(lbl.startsWith('M'))return CC.amb;if(lbl.startsWith('D'))return CC.grn;return'#8c93a3';},font:{family:'Inter',size:8},maxTicksLimit:32,maxRotation:0},grid:{color:ctx=>{const lbl=lblFull[ctx.index]??'';return(lbl==='M1.1'||lbl==='D1')?'#cdd1d9':'#e2e5ea';},lineWidth:ctx=>{const lbl=lblFull[ctx.index]??'';return(lbl==='M1.1'||lbl==='D1')?2:1;}},border:{display:false}},y:{ticks:{color:'#8c93a3',font:{family:'Inter',size:9}},grid:{color:'#e2e5ea'},border:{display:false}}}}});
+  dc('cCmpSub');CH.cCmpSub=new Chart(document.getElementById('cCmpSub'),{type:'line',data:{labels:lblS,datasets:rows.map((r,i)=>mk(getSub(r),CL[i],`Ciclo ${num(r,I.CICLOS)??indices[i]+1} ↑`))},options:{...CO(),plugins:{...CO().plugins,tooltip:mkTT(rows)}}});
+  dc('cCmpPausa');CH.cCmpPausa=new Chart(document.getElementById('cCmpPausa'),{type:'line',data:{labels:lblP,datasets:rows.map((r,i)=>mk(getAllPausa(r),CL[i],`Ciclo ${num(r,I.CICLOS)??indices[i]+1} ⏸`))},options:{...CO(),plugins:{...CO().plugins,tooltip:mkTT(rows)}}});
+  dc('cCmpDes');CH.cCmpDes=new Chart(document.getElementById('cCmpDes'),{type:'line',data:{labels:lblD,datasets:rows.map((r,i)=>mk(getDes(r),CL[i],`Ciclo ${num(r,I.CICLOS)??indices[i]+1} ↓`))},options:{...CO(),plugins:{...CO().plugins,tooltip:mkTT(rows)}}});
 }
 
-function mediana(arr){
-  const s=[...arr].filter(v=>v!==null).sort((a,b)=>a-b);
-  if(!s.length)return null;
-  const m=Math.floor(s.length/2);
-  return s.length%2?s[m]:(s[m-1]+s[m])/2;
-}
+// ════════════════════════════════
+// TEMPO — segmentado por bucha
+// ════════════════════════════════
+function mediana(arr){const s=[...arr].filter(v=>v!==null).sort((a,b)=>a-b);if(!s.length)return null;const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;}
 function deltas(colIdx){
-  const raw=DATA.map((r,i)=>{
-    if(i===0)return null;
-    const cur=num(r,colIdx),prev=num(DATA[i-1],colIdx);
-    if(cur===null||prev===null)return null;
-    const d=cur-prev;return d>=0?+d.toFixed(3):null;
-  });
-  const med=mediana(raw);
-  if(!med)return raw;
+  const raw=DATA.map((r,i)=>{if(i===0)return null;const cur=num(r,colIdx),prev=num(DATA[i-1],colIdx);if(cur===null||prev===null)return null;const d=cur-prev;return d>=0?+d.toFixed(3):null;});
+  const med=mediana(raw);if(!med)return raw;
   return raw.map(v=>v!==null&&v>med*1.6?null:v);
 }
 
 function renderTempo(){
   const lb=DATA.map(r=>num(r,I.CICLOS)??'');
-  dc('cTempoSD');
-  CH.cTempoSD=new Chart(document.getElementById('cTempoSD'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Subida (s)',data:deltas(I.T_SUB),borderColor:'#2563eb',backgroundColor:'#2563eb0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#2563eb',borderWidth:1.5,fill:true,spanGaps:false},
-    {label:'Descida (s)',data:deltas(I.T_DES),borderColor:'#16a34a',backgroundColor:'#16a34a0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#16a34a',borderWidth:1.5,fill:true,spanGaps:false},
-  ]},options:CO()});
-  dc('cTempoAtivo');
-  CH.cTempoAtivo=new Chart(document.getElementById('cTempoAtivo'),{type:'line',data:{labels:lb,datasets:[
-    {label:'Motor Ativo (s)',data:deltas(I.T_ATIVO),borderColor:'#7c3aed',backgroundColor:'#7c3aed0d',tension:.5,pointRadius:2.5,pointHoverRadius:5,pointBackgroundColor:'#7c3aed',borderWidth:1.5,fill:true,spanGaps:false},
-  ]},options:CO()});
+  const tempoTT={callbacks:{title:items=>{const row=DATA[items[0].dataIndex];return row?`Ciclo ${num(row,I.CICLOS)??items[0].label}`:`Ciclo ${items[0].label}`;},label:ctx=>{const v=ctx.parsed.y;return v!==null?` ${ctx.dataset.label}: ${typeof v==='number'?v.toFixed(2)+' s':v}`:null;},footer:items=>{const row=DATA[items[0].dataIndex];if(!row)return[];const d=String(g(row,I.DATA)||'').trim(),h=String(g(row,I.HORA)||'').trim();const lines=[];if(d)lines.push('Data: '+d);if(h)lines.push('Hora: '+h);return lines;}}};
+
+  // Subida segmentada
+  const rawSub=deltas(I.T_SUB),rawDes=deltas(I.T_DES);
+  const subDs=[],desDs=[];
+  BUCHA_HIST.forEach(hist=>{
+    const pal=BUCHA_PALETTE[hist.paletteIdx];const short=hist.bucha.split(':')[0];
+    subDs.push({label:`Subida — ${short}`,data:DATA.map((r,i)=>(i>=hist.startDataIdx&&i<=hist.endDataIdx)?rawSub[i]:null),borderColor:pal.line,backgroundColor:pal.fill,tension:.5,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:pal.line,borderWidth:1.5,fill:true,spanGaps:false});
+    desDs.push({label:`Descida — ${short}`,data:DATA.map((r,i)=>(i>=hist.startDataIdx&&i<=hist.endDataIdx)?rawDes[i]:null),borderColor:pal.line,backgroundColor:pal.fill+'88',borderDash:[4,3],tension:.5,pointRadius:2,pointHoverRadius:5,pointBackgroundColor:pal.line,borderWidth:1.2,fill:false,spanGaps:false});
+  });
+  if(!subDs.length){
+    subDs.push({label:'Subida (s)',data:rawSub,borderColor:BUCHA_PALETTE[0].line,backgroundColor:BUCHA_PALETTE[0].fill,tension:.5,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:BUCHA_PALETTE[0].line,borderWidth:1.5,fill:true,spanGaps:false});
+    desDs.push({label:'Descida (s)',data:rawDes,borderColor:BUCHA_PALETTE[1].line,backgroundColor:BUCHA_PALETTE[1].fill,tension:.5,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:BUCHA_PALETTE[1].line,borderWidth:1.5,fill:true,spanGaps:false});
+  }
+  dc('cTempoSD');CH.cTempoSD=new Chart(document.getElementById('cTempoSD'),{type:'line',data:{labels:lb,datasets:[...subDs,...desDs]},options:COT(DATA,{plugins:{tooltip:tempoTT}})});
+  renderSegLegend('legTempoSD',BUCHA_HIST.map(h=>({color:BUCHA_PALETTE[h.paletteIdx].line,label:`${h.bucha.split(':')[0]} (Ciclo ${h.ciclo}→)`})));
+
+  // Motor ativo segmentado
+  const rawAtivo=deltas(I.T_ATIVO);
+  const ativoDs=[];
+  BUCHA_HIST.forEach(hist=>{
+    const pal=BUCHA_PALETTE[hist.paletteIdx];const short=hist.bucha.split(':')[0];
+    ativoDs.push({label:`Motor Ativo — ${short}`,data:DATA.map((r,i)=>(i>=hist.startDataIdx&&i<=hist.endDataIdx)?rawAtivo[i]:null),borderColor:pal.line,backgroundColor:pal.fill,tension:.5,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:pal.line,borderWidth:1.5,fill:true,spanGaps:false});
+  });
+  if(!ativoDs.length) ativoDs.push({label:'Motor Ativo (s)',data:rawAtivo,borderColor:BUCHA_PALETTE[0].line,backgroundColor:BUCHA_PALETTE[0].fill,tension:.5,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:BUCHA_PALETTE[0].line,borderWidth:1.5,fill:true,spanGaps:false});
+  dc('cTempoAtivo');CH.cTempoAtivo=new Chart(document.getElementById('cTempoAtivo'),{type:'line',data:{labels:lb,datasets:ativoDs},options:COT(DATA,{plugins:{tooltip:tempoTT}})});
+  renderSegLegend('legTempoAtivo',BUCHA_HIST.map(h=>({color:BUCHA_PALETTE[h.paletteIdx].line,label:`${h.bucha.split(':')[0]} (Ciclo ${h.ciclo}→)`})));
+
   const last=DATA[DATA.length-1];
   document.getElementById('infoTotal').innerHTML=`
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#71706e" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
-    Tempo total de teste acumulado: <strong>${fmtHora(num(last,I.T_TOTAL))}</strong>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#8c93a3" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg>
+    Tempo total de teste: <strong>${fmtHora(num(last,I.T_TOTAL))}</strong>
     &nbsp;·&nbsp; Subindo acumulado: <strong>${fmtMin(num(last,I.T_SUB))}</strong>
     &nbsp;·&nbsp; Descendo acumulado: <strong>${fmtMin(num(last,I.T_DES))}</strong>
     &nbsp;·&nbsp; Motor ativo acumulado: <strong>${fmtMin(num(last,I.T_ATIVO))}</strong>`;
 }
 
+// ════════════════════════════════
+// LOAD — auto-refresh: 120s
+// ════════════════════════════════
 async function loadData(){
   const btn=document.getElementById('btnR');
   btn.disabled=true;btn.classList.add('spin');
@@ -384,21 +790,26 @@ async function loadData(){
     if(!res.ok)throw new Error(`HTTP ${res.status}`);
     const parsed=parseCSV(await res.text());
     if(!parsed.length)throw new Error('sem dados');
-    DATA=parsed;enrich(DATA);populateSelects();renderResumo();renderPerfil();
+    DATA=parsed;
+    enrich(DATA);
+    buildBuchaHist();
+    populateSelects();
+    renderResumo();renderPerfil();
     const at=document.querySelector('.tab.active')?.textContent?.trim();
     if(at==='TENDÊNCIA')renderTendencia();
     if(at==='TEMPO DE CICLO')renderTempo();
     if(at==='COMPARADOR')renderComparador();
+    if(at==='PAUSA 5 MIN'){renderPausa();renderPausaTendencia();}
     const now=new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
     document.getElementById('lu').textContent=now;
     const last=DATA[DATA.length-1];
-    document.getElementById('ft').textContent=`Olsen Eletrônica · motor_assento_bucha_10FV_90NY · ${num(last,I.CICLOS)??'?'} ciclos · ${now} · auto-refresh 60s`;
+    document.getElementById('ft').textContent=`Olsen Eletrônica · analise_motor_com_pausa · ${num(last,I.CICLOS)??'?'} ciclos · ${now} · auto-refresh 120s`;
   }catch(e){
     document.getElementById('kpiGrid').innerHTML=`<div class="sbox"><span>erro: ${e.message}</span></div>`;
     document.getElementById('lu').textContent='erro';console.error(e);
   }finally{
     btn.disabled=false;btn.classList.remove('spin');
-    TM=setTimeout(loadData,60000);
+    TM=setTimeout(loadData,120000);
   }
 }
 loadData();
